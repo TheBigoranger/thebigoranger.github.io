@@ -17,38 +17,38 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"blog.theseele.site","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="前言&amp;emsp;&amp;emsp;先给出结论：wndr4300路由器刷第三方固件拓展可玩性是可行的，但自由度的扩大带来的是系统部分性能的损失以及复杂的调试工作，刷入第三方固件，哪怕是官方第三方固件，都没有办法轻易通过可视化交互方式轻松刷回原厂固件，希望在刷之前三思。我刷了固件之后经过一番调试成功使用OpenWrt的官方固件达到了流量转发和无线wifi的功能。但是由于第三方固件的原因，穿墙能力以及带宽限制">
 <meta property="og:type" content="article">
 <meta property="og:title" content="wndr4300路由器刷第三方固件和刷回原厂固件">
-<meta property="og:url" content="http://example.com/2019/08/08/wndr4300%E8%B7%AF%E7%94%B1%E5%99%A8%E5%88%B7%E7%AC%AC%E4%B8%89%E6%96%B9%E5%9B%BA%E4%BB%B6%E5%92%8C%E5%88%B7%E5%9B%9E%E5%8E%9F%E5%8E%82%E5%9B%BA%E4%BB%B6/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="http://blog.theseele.site/2019/08/08/wndr4300%E8%B7%AF%E7%94%B1%E5%99%A8%E5%88%B7%E7%AC%AC%E4%B8%89%E6%96%B9%E5%9B%BA%E4%BB%B6%E5%92%8C%E5%88%B7%E5%9B%9E%E5%8E%9F%E5%8E%82%E5%9B%BA%E4%BB%B6/index.html">
+<meta property="og:site_name" content="橘子的博客">
 <meta property="og:description" content="前言&amp;emsp;&amp;emsp;先给出结论：wndr4300路由器刷第三方固件拓展可玩性是可行的，但自由度的扩大带来的是系统部分性能的损失以及复杂的调试工作，刷入第三方固件，哪怕是官方第三方固件，都没有办法轻易通过可视化交互方式轻松刷回原厂固件，希望在刷之前三思。我刷了固件之后经过一番调试成功使用OpenWrt的官方固件达到了流量转发和无线wifi的功能。但是由于第三方固件的原因，穿墙能力以及带宽限制">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/.com//OpenWrt固件版本.png">
-<meta property="og:image" content="http://example.com/.com//网件控制台中固件升级.png">
-<meta property="og:image" content="http://example.com/.com//网件控制台中固件升级确认.png">
-<meta property="og:image" content="http://example.com/.com//OpenWrtWiFi标志.png">
-<meta property="og:image" content="http://example.com/.com//OpenWrt登陆界面.png">
-<meta property="og:image" content="http://example.com/.com//OpenWrt软件.png">
-<meta property="og:image" content="http://example.com/.com//OpenWrt软件更新.png">
-<meta property="og:image" content="http://example.com/.com//OpenWrt卸载dnsmasq.png">
-<meta property="og:image" content="http://example.com/.com//OpenWrt安装dnsmasq-full.png">
-<meta property="og:image" content="http://example.com/.com//OpenWrt网页访问缓慢解决方法.png">
-<meta property="og:image" content="http://example.com/.com//OpenWrt终端.png">
-<meta property="og:image" content="http://example.com/.com//tftp的wikipedia.png">
-<meta property="og:image" content="http://example.com/.com//IPv4.png">
-<meta property="og:image" content="http://example.com/.com//ping通.png">
-<meta property="og:image" content="http://example.com/.com//tftp命令行.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//OpenWrt固件版本.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//网件控制台中固件升级.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//网件控制台中固件升级确认.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//OpenWrtWiFi标志.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//OpenWrt登陆界面.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//OpenWrt软件.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//OpenWrt软件更新.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//OpenWrt卸载dnsmasq.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//OpenWrt安装dnsmasq-full.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//OpenWrt网页访问缓慢解决方法.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//OpenWrt终端.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//tftp的wikipedia.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//IPv4.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//ping通.png">
+<meta property="og:image" content="http://blog.theseele.site/.com//tftp命令行.png">
 <meta property="article:published_time" content="2019-08-08T07:16:47.000Z">
 <meta property="article:modified_time" content="2020-09-13T09:25:24.000Z">
 <meta property="article:author" content="Ethan Xu">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/.com//OpenWrt固件版本.png">
+<meta name="twitter:image" content="http://blog.theseele.site/.com//OpenWrt固件版本.png">
 
-<link rel="canonical" href="http://example.com/2019/08/08/wndr4300%E8%B7%AF%E7%94%B1%E5%99%A8%E5%88%B7%E7%AC%AC%E4%B8%89%E6%96%B9%E5%9B%BA%E4%BB%B6%E5%92%8C%E5%88%B7%E5%9B%9E%E5%8E%9F%E5%8E%82%E5%9B%BA%E4%BB%B6/">
+<link rel="canonical" href="http://blog.theseele.site/2019/08/08/wndr4300%E8%B7%AF%E7%94%B1%E5%99%A8%E5%88%B7%E7%AC%AC%E4%B8%89%E6%96%B9%E5%9B%BA%E4%BB%B6%E5%92%8C%E5%88%B7%E5%9B%9E%E5%8E%9F%E5%8E%82%E5%9B%BA%E4%BB%B6/">
 
 
 <script id="page-configurations">
@@ -61,7 +61,7 @@
   };
 </script>
 
-  <title>wndr4300路由器刷第三方固件和刷回原厂固件 | Hexo</title>
+  <title>wndr4300路由器刷第三方固件和刷回原厂固件 | 橘子的博客</title>
   
 
 
@@ -112,7 +112,7 @@
 
     <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">Hexo</h1>
+      <h1 class="site-title">橘子的博客</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
   </div>
@@ -135,7 +135,7 @@
   </li>
         <li class="menu-item menu-item-english">
 
-    <a href="https://blog.theseele.site/en/" rel="noopener" target="_blank"><i class="fa fa-language fa-fw"></i>English</a>
+    <a href="https://blog.theseele.site/en/" rel="section"><i class="fa fa-language fa-fw"></i>English</a>
 
   </li>
         <li class="menu-item menu-item-archives">
@@ -167,7 +167,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2019/08/08/wndr4300%E8%B7%AF%E7%94%B1%E5%99%A8%E5%88%B7%E7%AC%AC%E4%B8%89%E6%96%B9%E5%9B%BA%E4%BB%B6%E5%92%8C%E5%88%B7%E5%9B%9E%E5%8E%9F%E5%8E%82%E5%9B%BA%E4%BB%B6/">
+    <link itemprop="mainEntityOfPage" href="http://blog.theseele.site/2019/08/08/wndr4300%E8%B7%AF%E7%94%B1%E5%99%A8%E5%88%B7%E7%AC%AC%E4%B8%89%E6%96%B9%E5%9B%BA%E4%BB%B6%E5%92%8C%E5%88%B7%E5%9B%9E%E5%8E%9F%E5%8E%82%E5%9B%BA%E4%BB%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -176,7 +176,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="橘子的博客">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -485,7 +485,7 @@ document.querySelectorAll('.pdfobject-container').forEach(element => {
       quicklink({
         timeout : 3000,
         priority: true,
-        ignores : [uri => uri.includes('#'),uri => uri === 'http://example.com/2019/08/08/wndr4300%E8%B7%AF%E7%94%B1%E5%99%A8%E5%88%B7%E7%AC%AC%E4%B8%89%E6%96%B9%E5%9B%BA%E4%BB%B6%E5%92%8C%E5%88%B7%E5%9B%9E%E5%8E%9F%E5%8E%82%E5%9B%BA%E4%BB%B6/',]
+        ignores : [uri => uri.includes('#'),uri => uri === 'http://blog.theseele.site/2019/08/08/wndr4300%E8%B7%AF%E7%94%B1%E5%99%A8%E5%88%B7%E7%AC%AC%E4%B8%89%E6%96%B9%E5%9B%BA%E4%BB%B6%E5%92%8C%E5%88%B7%E5%9B%9E%E5%8E%9F%E5%8E%82%E5%9B%BA%E4%BB%B6/',]
       });
       });
   </script>
