@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>一个自用的.vimrc模板 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="分享一个自用的.vimrc模板，需要配合Vundle使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个自用的.vimrc模板">
+<meta property="og:url" content="http://example.com/2021/06/10/%E4%B8%80%E4%B8%AA%E8%87%AA%E7%94%A8%E7%9A%84-vimrc%E6%A8%A1%E6%9D%BF/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="分享一个自用的.vimrc模板，需要配合Vundle使用。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-10T11:49:51.000Z">
+<meta property="article:modified_time" content="2022-07-30T09:14:53.336Z">
+<meta property="article:author" content="Ethan Xu">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-一个自用的-vimrc模板" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/10/%E4%B8%80%E4%B8%AA%E8%87%AA%E7%94%A8%E7%9A%84-vimrc%E6%A8%A1%E6%9D%BF/" class="article-date">
+  <time class="dt-published" datetime="2021-06-10T11:49:51.000Z" itemprop="datePublished">2021-06-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      一个自用的.vimrc模板
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>分享一个自用的.vimrc模板，需要配合Vundle使用。</p>
+<span id="more"></span>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> nocompatible</span><br><span class="line"><span class="keyword">filetype</span> off </span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; set up the  runtime path</span></span><br><span class="line"><span class="keyword">set</span> rtp+=~/.<span class="keyword">vim</span>/bundle/Vundle.<span class="keyword">vim</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; show the row number</span></span><br><span class="line"><span class="keyword">set</span> <span class="keyword">nu</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; allocate the width of tab as 4 space</span></span><br><span class="line"><span class="keyword">set</span> <span class="keyword">ts</span>=<span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; highlight the cursor line</span></span><br><span class="line"><span class="keyword">set</span> cursorline</span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; apply the scheme</span></span><br><span class="line"><span class="keyword">syntax</span> <span class="keyword">on</span></span><br><span class="line"><span class="keyword">set</span> t_Co=<span class="number">256</span></span><br><span class="line"><span class="comment">&quot;colorscheme skeletor</span></span><br><span class="line"><span class="comment">&quot;colorscheme molokai</span></span><br><span class="line"><span class="comment">&quot;colorscheme jellybeans</span></span><br><span class="line"><span class="keyword">colorscheme</span> monokai-bold</span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; this is where plugin being used</span></span><br><span class="line"><span class="keyword">call</span> vundle#begin()</span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; Vundle itself~</span></span><br><span class="line">Plugin <span class="string">&#x27;VundleVim/Vundle.vim&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; Color scheme</span></span><br><span class="line">Plugin <span class="string">&#x27;flazz/vim-colorschemes&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; the bracket plug</span></span><br><span class="line">Plugin <span class="string">&#x27;frazrepo/vim-rainbow&#x27;</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">g:rainbow_active</span> = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; told you what type of file you r dealing with and what mode you r under</span></span><br><span class="line">Plugin <span class="string">&#x27;itchyny/lightline.vim&#x27;</span></span><br><span class="line"><span class="comment">&quot; close the original mode display and apply the new one</span></span><br><span class="line"><span class="keyword">set</span> noshowmode</span><br><span class="line"><span class="keyword">set</span> laststatus=<span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; nerd tree on side</span></span><br><span class="line">Plugin <span class="string">&#x27;scrooloose/nerdtree&#x27;</span>						</span><br><span class="line"><span class="keyword">map</span> <span class="symbol">&lt;C-d&gt;</span> :NERDTreeToggle<span class="symbol">&lt;CR&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; support for the markdown</span></span><br><span class="line">Plugin <span class="string">&#x27;godlygeek/tabular&#x27;</span></span><br><span class="line">Plugin <span class="string">&#x27;plasticboy/vim-markdown&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; auto pair</span></span><br><span class="line">Plugin <span class="string">&#x27;Raimondi/delimitMate&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; neo complete</span></span><br><span class="line">Plugin <span class="string">&#x27;Shougo/neocomplcache&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; easy tags</span></span><br><span class="line"></span><br><span class="line">Plugin <span class="string">&#x27;majutsushi/tagbar&#x27;</span></span><br><span class="line">Plugin <span class="string">&#x27;xolox/vim-misc&#x27;</span></span><br><span class="line">Plugin <span class="string">&#x27;xolox/vim-easytags&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&quot; tagbar</span></span><br><span class="line">Plugin <span class="string">&#x27;jszakmeister/markdown2ctags&#x27;</span></span><br><span class="line"><span class="comment">&quot; Add support for markdown files in tagbar.</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">g:tagbar_type_markdown</span> = &#123;</span><br><span class="line">	\ <span class="string">&#x27;ctagstype&#x27;</span>: <span class="string">&#x27;markdown&#x27;</span>,</span><br><span class="line">	\ <span class="string">&#x27;ctagsbin&#x27;</span> : <span class="string">&#x27;/root/.vim/bundle/markdown2ctags/markdown2ctags.py&#x27;</span>,</span><br><span class="line">	\ <span class="string">&#x27;ctagsargs&#x27;</span> : <span class="string">&#x27;-f - --sort=yes --sro=»&#x27;</span>,</span><br><span class="line">	\ <span class="string">&#x27;kinds&#x27;</span> : [</span><br><span class="line">	\ <span class="string">&#x27;s:sections&#x27;</span>,</span><br><span class="line">	\ <span class="string">&#x27;i:images&#x27;</span></span><br><span class="line">	\ ],</span><br><span class="line">	\ <span class="string">&#x27;sro&#x27;</span> : <span class="string">&#x27;»&#x27;</span>,</span><br><span class="line">    \ <span class="string">&#x27;kind2scope&#x27;</span> : &#123;</span><br><span class="line">    \ <span class="string">&#x27;s&#x27;</span> : <span class="string">&#x27;section&#x27;</span>,</span><br><span class="line">	\ &#125;,</span><br><span class="line">	\ <span class="string">&#x27;sort&#x27;</span>: <span class="number">0</span>,</span><br><span class="line">\ &#125;</span><br><span class="line"><span class="keyword">map</span> <span class="symbol">&lt;F4&gt;</span> :TagbarToggle<span class="symbol">&lt;CR&gt;</span></span><br><span class="line"></span><br><span class="line">\<span class="keyword">let</span> <span class="variable">g:neocomplcache_enable_at_startup</span> = <span class="number">1</span></span><br><span class="line"><span class="keyword">se</span> mouse+=<span class="keyword">a</span></span><br><span class="line"><span class="keyword">call</span> vundle#end()</span><br><span class="line"><span class="keyword">filetype</span> plugin <span class="built_in">indent</span> <span class="keyword">on</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/10/%E4%B8%80%E4%B8%AA%E8%87%AA%E7%94%A8%E7%9A%84-vimrc%E6%A8%A1%E6%9D%BF/" data-id="cl67oj8020000ahh9hmc8f0w6" data-title="一个自用的.vimrc模板" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/07/08/%E4%B8%80%E5%8F%B7%E5%85%AC%E8%B7%AF/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          一号公路
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/09/05/%E5%85%B3%E4%BA%8E%E5%87%BA%E5%9B%BD%E7%95%99%E5%AD%A6%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">关于出国留学的二三事</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/07/08/%E4%B8%80%E5%8F%B7%E5%85%AC%E8%B7%AF/">一号公路</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/10/%E4%B8%80%E4%B8%AA%E8%87%AA%E7%94%A8%E7%9A%84-vimrc%E6%A8%A1%E6%9D%BF/">一个自用的.vimrc模板</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/05/%E5%85%B3%E4%BA%8E%E5%87%BA%E5%9B%BD%E7%95%99%E5%AD%A6%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B/">关于出国留学的二三事</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/01/%E5%8A%A0%E5%AF%86%E7%9A%84%E5%8D%9A%E5%AE%A2/">加密的博客</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 Ethan Xu<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
