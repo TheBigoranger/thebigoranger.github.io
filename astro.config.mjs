@@ -11,6 +11,6 @@ import sitemap from "@astrojs/sitemap";
 // https://astro.build/config
 export default defineConfig({
     integrations: [react(), tailwind(), sitemap()],
-    site: "https://blog.ethanyxu.com",
+    site: "https://blog.ethanyxu.com/Portfolio",
 //    base: template.base,
 });
