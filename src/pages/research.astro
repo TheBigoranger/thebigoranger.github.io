@@ -13,42 +13,45 @@ const { research_areas } = profile;
     <h1 class="text-3xl font-bold mb-8">Research Statement</h1>
 
     <div class="mb-12">
-      <p class="text-lg mb-6">
-        My research focuses on groundbreaking investigations into radioactivity and the discovery of new radioactive elements. Through meticulous experimental techniques and innovative methodologies, I aim to advance our understanding of radioactive phenomena and their applications in both physics and chemistry.
-      </p>
-      <p class="text-lg mb-6">
-        This interdisciplinary approach has led to significant discoveries, including the isolation of polonium and radium, contributing to the foundation of modern nuclear physics and radiochemistry.
-      </p>
+      <p class="text-lg mb-6" style="text-indent:2em">
+		The increasing availability of inexpensive sensors, processors, and actuators makes it possible to deploy large networks of simple agents, motivating my research on scalable and safety-aware control for multi-agent systems (MAS). Cheap agents enable practical large-scale deployment but also introduce real-world constraints such as actuator saturation, limited communication, nonlinear dynamics, and heterogeneous mission objectives. My work addresses these challenges by integrating anti-windup control for saturation handling, event-triggered mechanisms for communication efficiency, and linear parameter-varying (LPV) modeling to capture nonlinear behavior while preserving tractable optimization-based design.
+	</p>
+
+    <p class="text-lg mb-6" style="text-indent:2em">
+		A central focus of my research is distributed optimization, which allows agents to cooperatively solve global tasks using only local interactions. In this context, I found that the finite condition number of the Laplacian matrix plays a critical role in determining convergence and coordination performance, motivating algorithms that explicitly account for or regulate network connectivity properties. When individual agents pursue their own objectives but must satisfy collective safety requirements—such as maintaining connectivity or avoiding collisions—I employ Control Barrier Functions (CBFs) to guarantee forward-invariant safety constraints. By combining distributed optimization, LPV modeling, anti-windup design, event-triggered communication, and CBF-based safety, my research aims to build a unified control framework that is robust, scalable, efficient, and suitable for real-world deployment in large-scale MAS.
+	</p>
     </div>
 
     <h2 class="text-2xl font-bold mb-6">Research Areas</h2>
-    <div class="grid gap-8 mb-12">
-      {
-        research_areas.map((area) => (
-          <div class="flex gap-6 items-start">
-            <BetterIcon>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke-width="2"
-                class="size-6 stroke-accent"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d={RESEARCH_ICONS[area.field as keyof typeof RESEARCH_ICONS]?.path || RESEARCH_ICONS['computer-science'].path}
-                />
-              </svg>
-            </BetterIcon>
-            <div>
-              <h3 class="text-xl font-semibold mb-2">{area.title}</h3>
-              <p class="text-base">{area.description}</p>
-            </div>
-          </div>
-        ))
-      }
-    </div>
+	<div class="grid gap-8 mb-12">
+	{
+    research_areas.map((area) => (
+      <div class="flex gap-6 items-start">
+        <BetterIcon>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke-width="2"
+            class="size-6 stroke-accent"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d={RESEARCH_ICONS[area.field as keyof typeof RESEARCH_ICONS]?.path ||RESEARCH_ICONS['computer-science'].path}
+            />
+          </svg>
+        </BetterIcon>
+        <div>
+          <h3 class="text-xl font-semibold mb-2">{area.title}</h3>
+          <p class="text-base">{area.description}</p>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+
 
     <List listTitle="Current Projects" listItems={[
       {

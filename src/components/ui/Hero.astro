@@ -8,12 +8,11 @@ const {fullName, title, institute, profilePicture} = Astro.props
 ---
 <div class='flex-1'>
   <h1 class='text-4xl font-bold mb-4'>
-    Welcome! I'm <span class='text-secondary'>{fullName}</span>
+    Hi! I'm <span class='text-secondary'>{fullName}</span>
   </h1>
   <p class='text-xl text-gray-600 mb-4'>{title}{institute ? ` at ${institute}` : ''}</p>
   <p class='text-lg mb-6'>
-    Brief impactful description of your research focus and academic mission.
-    Highlight your key contributions and areas of expertise.
+    I am a Ph.D. student at UC Irvine studying Systems and Control under the supervision of the professor <a href = "https://engineering.uci.edu/users/faryar-jabbari" style = "color:blue">Faryar Jabbari</a>. I have an education background in mechanical engineering, especially on optimization and control theory. My current interest is multi-agent system, Anti-windup control, event-triggered control, linear parameter varying systems, distributed optimization on graph, and control barrier function.
   </p>
   <div class='flex gap-4'>
     <SocialIcons />
