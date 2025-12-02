@@ -6,9 +6,9 @@ export async function GET(context) {
     const blog = await getCollection("blog");
     return rss({
         // `<title>` field in output xml
-        title: seo.default_title,
+        title: seo.title,
         // `<description>` field in output xml
-        description: seo.default_description,
+        description: seo.description,
         // Pull in your project "site" from the endpoint context
         // https://docs.astro.build/en/reference/api-reference/#site
         site: context.site,
