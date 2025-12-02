@@ -12,5 +12,5 @@ import sitemap from "@astrojs/sitemap";
 export default defineConfig({
     integrations: [react(), tailwind(), sitemap()],
     site: "https://www.ethanyxu.com",
-//    base: base,
+    base: main,
 });
