@@ -1,9 +1,10 @@
 export const profile = {
 	fullName: 'Yicheng Xu',
-	title: '',
+	title: 'Ph.D. student',
 	institute: 'University of California，Irvine',
 	author_name: 'Yicheng Xu', // Author name to be highlighted in the papers section
 	research_areas: [
+		{title: 'control theory', description: 'ffff'},
 		// { title: 'Physics', description: 'Brief description of the research interest', field: 'physics' },
 	],
 }
