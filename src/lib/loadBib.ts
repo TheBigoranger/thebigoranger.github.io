@@ -1,11 +1,7 @@
 // src/lib/loadBib.ts
-import fs from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, resolve } from "node:path";
 import { parse } from "@retorquere/bibtex-parser";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// 直接把 Mypaper.bib 当作纯文本打包进来
+import bibContent from "../data/Mypaper.bib?raw";
 
 /**
  * 递归收集 BibTeX 值里的所有字符串叶节点
@@ -47,17 +43,16 @@ function cleanText(v: any): string {
  * 从整个 .bib 文本里按 entry key 抓出该条的 author = { ... } 原文
  * 保留 "Last, First and Last, First ..." 的结构
  */
-function extractAuthorRaw(bibContent: string, key: string): string {
+function extractAuthorRaw(bib: string, key: string): string {
   if (!key) return "";
 
   // 找到这个条目的开头 "@...{key,"
-  const entryStart = bibContent.search(
+  const entryStart = bib.search(
     new RegExp(`@[^\\{]+\\{\\s*${key}\\s*,`, "i")
   );
   if (entryStart === -1) return "";
 
-  // 从 key 之后开始找 "author"
-  const afterKey = bibContent.slice(entryStart);
+  const afterKey = bib.slice(entryStart);
   const authorMatch = afterKey.match(/author\s*=\s*\{/i);
   if (!authorMatch) return "";
 
@@ -77,7 +72,6 @@ function extractAuthorRaw(bibContent: string, key: string): string {
     } else if (ch === "}") {
       depth--;
       if (inAuthor && depth === 0) {
-        // 包含内容的区间: (braceStart+1 .. i-1)
         const inside = afterKey.slice(braceStart + 1, i);
         return inside.trim();
       }
@@ -87,19 +81,17 @@ function extractAuthorRaw(bibContent: string, key: string): string {
   return "";
 }
 
-export function loadBib(filename: string) {
-  const bibPath = resolve(__dirname, "../data", filename);
-  const content = fs.readFileSync(bibPath, "utf8");
-
-  const lib = parse(content);
+// filename 参数保留（兼容 cv.ts 的调用），但本实现忽略它
+export function loadBib(_filename: string) {
+  const lib = parse(bibContent);
 
   return lib.entries.map((entry: any) => {
     const f = entry.fields ?? {};
 
     const title = cleanText(f.title);
 
-    // ★★ 关键：作者不要 cleanText，直接从 .bib 原文中提取 ★★
-    const authors = extractAuthorRaw(content, entry.key);
+    // 关键：作者从原始 .bib 文本里抽出来，保持 "Last, First and ..." 格式
+    const authors = extractAuthorRaw(bibContent, entry.key);
 
     const year = cleanText(f.year);
     const venue =
@@ -112,7 +104,7 @@ export function loadBib(filename: string) {
 
     return {
       title,
-      authors, // e.g. "Ong, Pio and Xu, Yicheng and Bena, Ryan M. and ..."
+      authors, // e.g. "Ong, Pio and Xu, Yicheng and ..."
       year,
       venue,
       link,
@@ -123,3 +115,4 @@ export function loadBib(filename: string) {
     };
   });
 }
+
