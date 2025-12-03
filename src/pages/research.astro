@@ -23,35 +23,45 @@ const { research_areas } = profile;
     </div>
 
     <h2 class="text-2xl font-bold mb-6">Research Areas</h2>
-	<div class="grid gap-8 mb-12">
-	{
-    research_areas.map((area) => (
-      <div class="flex gap-6 items-start">
-        <BetterIcon>
+<div class="space-y-6 mb-12">
+  {research_areas.map((area) => (
+    <div class="flex items-start gap-4">
+
+      {/* ICON LEFT */}
+      <div class="flex items-start justify-center">
+        <BetterIcon class="!mt-0">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="none"
             stroke-width="2"
-            class="size-6 stroke-accent"
+            class="h-6 w-6 stroke-accent"
           >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              d={RESEARCH_ICONS[area.field as keyof typeof RESEARCH_ICONS]?.path ||RESEARCH_ICONS['computer-science'].path}
+              d={
+                RESEARCH_ICONS[area.field as keyof typeof RESEARCH_ICONS]?.path ||
+                RESEARCH_ICONS["computer-science"].path
+              }
             />
           </svg>
         </BetterIcon>
-        <div>
-          <h3 class="text-xl font-semibold mb-2">{area.title}</h3>
-          <p class="text-base">{area.description}</p>
-        </div>
       </div>
-    ))
-  }
+
+      {/* TEXT BLOCK RIGHT */}
+      <div class="leading-tight">
+        <h3 class="mt-0 mb-1 text-xl font-semibold">
+          {area.title}
+        </h3>
+        <p class="mt-0 text-base leading-relaxed">
+          {area.description}
+        </p>
+      </div>
+
+    </div>
+  ))}
 </div>
-
-
 
     <List listTitle="Current Projects" listItems={[
       {

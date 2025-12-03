@@ -1,53 +1,193 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { publications } from "@/data/cv";
-import { highlightAuthor } from "@/lib/utils";
-import {template} from "@/settings";
+import { publications as RAW_PUBLICATIONS } from "@/data/cv";
+import { profile } from "@/settings";
 
-const ALL_PAPERS = publications; // This will be replaced with dynamic data later
+/* ---------------------- Normalize Helper ---------------------- */
+const normalize = (s: string) =>
+  s.toLowerCase().replace(/[^a-z]/g, "");
+
+/* ---------------------- Read fullName from settings.ts ---------------------- */
+
+const nameFromSettings: string =
+  (profile as any)?.fullName ??
+  "";   // 如果没有 fullName，就变成空串
+
+// tokenize: ["Yicheng", "Xu"]
+const fullNameTokens = nameFromSettings
+  .replace(/dr\.\s*/i, "")
+  .trim()
+  .split(/\s+/)
+  .filter(Boolean);
+
+// normalized last name
+const myLastNameNorm =
+  fullNameTokens.length > 0
+    ? normalize(fullNameTokens[fullNameTokens.length - 1])
+    : "";
+
+// normalized first name
+const myFirstNameNorm =
+  fullNameTokens.length > 0
+    ? normalize(fullNameTokens[0])
+    : "";
+
+/* ---------------------- Helper Functions ---------------------- */
+
+const getYear = (paper: any): string => paper.year || "";
+const getVenue = (paper: any): string => paper.venue || "";
+const getLink = (paper: any): string =>
+  paper.link || paper.pdf || paper.url || "";
+
+/**
+ * Parse BibTeX-style authors:
+ *   "Ong, Pio and Xu, Yicheng and Bena, Ryan M."
+ * → ["Pio Ong", "Yicheng Xu", "Ryan M. Bena"]
+ */
+const toAuthorPieces = (
+  authors: any
+): { display: string; isMe: boolean }[] => {
+  if (!authors) return [];
+
+  let s: string = String(authors).trim();
+  if (!s) return [];
+
+  // Split authors by " and "
+  const rawAuthors = s
+    .split(/\s+and\s+/i)
+    .map((t) => t.trim())
+    .filter(Boolean);
+
+  const out: { display: string; isMe: boolean }[] = [];
+
+  for (const raw of rawAuthors) {
+    let last = "";
+    let firsts = "";
+
+    if (raw.includes(",")) {
+      // "Last, First Middle"
+      const parts = raw.split(",").map((x) => x.trim());
+      last = parts[0] || "";
+      firsts = parts.slice(1).join(" ");
+    } else {
+      // Fallback: "First Middle Last"
+      const toks = raw.split(/\s+/);
+      firsts = toks.slice(0, -1).join(" ");
+      last = toks[toks.length - 1];
+    }
+
+    const display = `${firsts} ${last}`.replace(/\s+/g, " ").trim();
+
+    // normalize first and last token
+    const firstNorm = normalize(firsts.split(" ")[0] || "");
+    const lastNorm = normalize(last.split(" ").slice(-1)[0] || "");
+
+    // MATCH RULE：
+    //   last name 必须完全一样
+    //   first name 开头需要匹配
+    const isMe =
+      myLastNameNorm &&
+      lastNorm === myLastNameNorm &&
+      firstNorm.startsWith(myFirstNameNorm);
+
+    out.push({ display, isMe });
+  }
+
+  return out;
+};
+
+// Sort publication list (new → old)
+const ALL_PAPERS = [...RAW_PUBLICATIONS].sort((a, b) => {
+  const ya = Number(getYear(a) || 0);
+  const yb = Number(getYear(b) || 0);
+  return yb - ya;
+});
 ---
 
 <Layout title="Papers">
   <div class="prose max-w-none">
     <h1 class="text-3xl font-bold mb-8">Publications</h1>
 
-    <div class="space-y-8">
-      {
-        ALL_PAPERS.map((paper) => (
-          <div class="card bg-base-200">
-            <div class="card-body">
-              <h2 class="card-title text-xl">
-                <a href={template.base + paper.link} class="hover:text-accent">
-                  {paper.title}
-                </a>
-              </h2>
-              <p class="text-base mb-2">
-                <span class="font-medium">Authors:</span>{" "}
-                <span set:html={highlightAuthor(paper.authors)} />
-              </p>
-              <p class="text-sm mb-3">
-                <span class="italic">{paper.journal}</span> • {paper.time}
-              </p>
-              <p class="text-sm text-base-content/80">{paper.abstract}</p>
-              <div class="card-actions justify-end mt-4">
-                <a href={paper.link} class="btn btn-sm btn-secondary text-secondary-content">
-                  Read Paper
-                </a>
-              </div>
-            </div>
-          </div>
-        ))
-      }
-    </div>
+    <ul class="space-y-2">
+      {ALL_PAPERS.map((paper) => {
+        const year = getYear(paper);
+        const venue = getVenue(paper);
+        const link = getLink(paper);
 
-    <div class="flex justify-center mt-8">
-      <div class="join">
-        <button class="join-item btn btn-sm">«</button>
-        <button class="join-item btn btn-sm">1</button>
-        <button class="join-item btn btn-sm btn-active">2</button>
-        <button class="join-item btn btn-sm">3</button>
-        <button class="join-item btn btn-sm">»</button>
-      </div>
-    </div>
+        const authors = toAuthorPieces(paper.authors);
+
+        const metaPieces: any[] = [];
+        if (venue) metaPieces.push(<span><em>{venue}</em></span>);
+        if (year) metaPieces.push(<span>{year}</span>);
+
+        if (paper.doi) {
+          metaPieces.push(
+            <a
+              href={`https://doi.org/${paper.doi}`}
+              target="_blank"
+              class="underline hover:no-underline"
+            >
+              doi:{paper.doi}
+            </a>
+          );
+        } else if (paper.arxiv) {
+          metaPieces.push(
+            <a
+              href={`https://arxiv.org/abs/${paper.arxiv}`}
+              target="_blank"
+              class="underline hover:no-underline"
+            >
+              arXiv:{paper.arxiv}
+            </a>
+          );
+        }
+
+        return (
+          <li class="text-base leading-relaxed">
+
+            {/* [YEAR] */}
+            {year && <span class="font-semibold">[{year}] </span>}
+
+            {/* AUTHORS */}
+            <span>
+              {authors.map((a, idx) => (
+                <>
+                  {idx > 0 && <span>, </span>}
+                  {idx === authors.length - 1 &&
+                    authors.length > 1 && <span>and </span>}
+                  {a.isMe ? <strong>{a.display}</strong> : a.display}
+                </>
+              ))}
+              ,{" "}
+            </span>
+
+            {/* TITLE */}
+            <span>&quot;</span>
+            {link ? (
+              <a
+                href={link}
+                target="_blank"
+                class="font-semibold underline hover:no-underline"
+              >
+                {paper.title}
+              </a>
+            ) : (
+              <span class="font-semibold">{paper.title}</span>
+            )}
+            <span>&quot;, </span>
+
+            {/* VENUE + YEAR + DOI/ARXIV */}
+            {metaPieces.map((piece, idx) => (
+              <>
+                {idx > 0 && <span>, </span>}
+                {piece}
+              </>
+            ))}
+
+          </li>
+        );
+      })}
+    </ul>
   </div>
 </Layout>
+

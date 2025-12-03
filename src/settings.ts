@@ -2,11 +2,10 @@ export const profile = {
 	fullName: 'Yicheng Xu',
 	title: 'Ph.D. student',
 	institute: 'University of California，Irvine',
-	author_name: 'Yicheng Xu', // Author name to be highlighted in the papers section
 	research_areas: [
 		{title: 'Multi-agent system', description: 'Study of coordination, consensus, and control of interacting agents operating over networked environments, with emphasis on scalability and distributed decision-making.', field: 'MAS'},
 		{title: 'Anti-windup control', description: 'Design methods that prevent integrator windup in feedback controllers, ensuring stability and good performance under actuator saturation.', field: 'AW control'},
-		{title: 'Event-triggered Control', descrption: 'A control strategy that updates signals only when necessary, reducing communication and computation while maintaining system stability.', field: 'ETC'},
+		{title: 'Event-triggered Control', description: 'A control strategy that updates signals only when necessary, reducing communication and computation while maintaining system stability.', field: 'ETC'},
 		{title: 'Linear Parameter-Varying Systems', description: 'Dynamic models whose behavior depends on measurable, time-varying parameters, enabling systematic gain-scheduled or robust control design.', field: 'LPV system'},
 		{title: 'Distributed Optimization', description: 'Algorithms that allow multiple agents to cooperatively solve a global optimization problem using only local information and neighbor communication.', field: 'Distributed optimization'},
 		{title: 'Control Barrier Function', description:'A formal method for enforcing safety constraints, ensuring system trajectories remain within predefined safe sets through real-time constraint-based control.', field: 'CBF'}		
