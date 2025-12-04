@@ -6,7 +6,7 @@
   eprint = {2508.11795},
   abstract = {This paper generalizes the control barrier function framework by replacing scalar-valued functions with matrix-valued ones. Specifically, we develop barrier conditions for safe sets defined by matrix inequalities -- both semidefinite and indefinite. Matrix inequalities can be used to describe a richer class of safe sets, including nonsmooth ones. The safety filters constructed from our proposed matrix control barrier functions via semidefinite programming (CBF-SDP) are shown to be continuous. Our matrix formulation naturally provides a continuous safety filter for Boolean-based control barrier functions, notably for disjunctions (OR), without relaxing the safe set. We illustrate the effectiveness of the proposed framework with applications in drone network connectivity maintenance and nonsmooth obstacle avoidance, both in simulations and hardware experiments.},
   archiveprefix = {arXiv},
-  file = {C:\Users\ethan\Zotero\storage\YC4DPGF8\Matrix Control Barrier Functions.pdf}
+  file = {C:\Users\ethan\Zotero\storage\XBL3JGSE\Matrix Control Barrier Functions.pdf}
 }
 
 @incollection{Xu2020,
@@ -16,7 +16,8 @@
   year = 2020,
   pages = {142--150},
   doi = {10.1007/978-981-32-9698-5_17},
-  file = {C:\Users\ethan\Zotero\storage\C45ZNF82\Optimization Algorithm for Power Flow.pdf}
+  abstract = {This paper considers the optimization of line loss calculation and the improvement of the rapidity of power flow analysis. A novel splitting strategy, say, decoupling the topology associated with the power gird into the main network containing the power branch and the subnet-based segmentation, is proposed to reduce the iterative matrix dimension, which makes it possible to calculate the subnet and the main net with the tools of Newton-Raphson method and the fast flow algorithm separately. The feasibility and effectiveness of the proposed scheme are proven by simulation results of the IEEE-30 Bus system.},
+  file = {C:\Users\ethan\Zotero\storage\NW6J2UP3\Optimization Algorithm for Power Flow.pdf}
 }
 
 @inproceedings{Xu2022,
@@ -28,8 +29,9 @@
   pages = {4865--4871},
   publisher = {IEEE},
   doi = {10.1109/CDC51059.2022.9992896},
+  abstract = {Synthesis results are presented for a general discrete-time dynamic output feedback controller and its anti-windup augmentation for operation under bounded actuation. The approach is then adopted for the leader-follower tracking problem for a multi-agent system. We consider the l2 gain from the disturbances to a general output, and obtain upper bounds for such gains. The scheme developed includes sufficient conditions, in the form of LMIs, for both controller design and anti-windup synthesis. Numerical examples are presented to show the effectiveness.},
   isbn = {978-1-6654-6761-2},
-  file = {C:\Users\ethan\Zotero\storage\IRELYSMI\Discrete-Time_Output_Feedback_under_Bounded_Actuators_Single_and_Multi-agent_Problems.pdf}
+  file = {C:\Users\ethan\Zotero\storage\2GE7JRWA\Discrete-Time_Output_Feedback_under_Bounded_Actuators_Single_and_Multi-agent_Problems.pdf}
 }
 
 @inproceedings{Xu2024,
@@ -41,22 +43,12 @@
   pages = {1392--1397},
   publisher = {IEEE},
   doi = {10.23919/ACC60939.2024.10644563},
+  abstract = {This paper investigates a discrete-time multi-agent system, focusing on weight assignments in Laplacian matrices to enhance control performance. Leveraging leader-following network topologies and fast eigenvalue estimators, the algorithm minimizes the largest to smallest non-zero eigenvalue ratio. Max-consensus is used to guarantee finite convergence steps. An example demonstrates the improved closed-loop system performance.},
   isbn = {979-8-3503-8265-5},
-  file = {C:\Users\ethan\Zotero\storage\BMNPF7UF\Distributed_Optimization_of_Network_Weights_for_Improved_Performance.pdf}
+  file = {C:\Users\ethan\Zotero\storage\3W3DN3IG\Distributed_Optimization_of_Network_Weights_for_Improved_Performance.pdf}
 }
 
-@article{Xu2024a,
-  title = {Discrete-{{Time Leader-following Multi-Agent Systems}}: {{Saturation Constraints}} and {{Event-Triggered Control}}},
-  author = {Xu, Yicheng and Jabbari, Faryar},
-  year = 2024,
-  journal = {IEEE Transactions on Control of Network Systems},
-  pages = {1--12},
-  issn = {2325-5870},
-  doi = {10.1109/TCNS.2024.3516578},
-  file = {C:\Users\ethan\Zotero\storage\RHKINKJS\Discrete-Time_Leader-following_Multi-Agent_Systems_Saturation_Constraints_and_Event-Triggered_Control.pdf}
-}
-
-@inproceedings{Xu2024b,
+@inproceedings{Xu2024a,
   title = {Spline-Based Parameter Varying Output Feedback Synthesis with Improved {{L}} {\textsubscript{2}} Gain},
   booktitle = {2024 {{IEEE}} 63rd {{Conference}} on {{Decision}} and {{Control}} ({{CDC}})},
   author = {Xu, Yicheng and Jabbari, Faryar},
@@ -67,10 +59,25 @@
   doi = {10.1109/CDC56724.2024.10886461},
   abstract = {Dynamic output feedback synthesis for systems with Linear Parameter Varying (LPV) models is presented. The study focuses on solving Parameter-Dependent (PD) Linear Matrix Inequalities with a grid-based method, providing a modification to existing techniques that improves performance, particularly when a small number of nodes or splines are used. Additionally, a novel approach is proposed for synthesizing LPV Dynamic Output Feedback controllers without relying on the time derivative of scheduling parameters. The gridding-based method is employed for solving the associated PD LMIs in estimating the L2 gain of the closed-loop system. Numerical examples are provided to demonstrate the effectiveness of the proposed method.},
   isbn = {979-8-3503-1633-9},
-  file = {C:\Users\ethan\Zotero\storage\R4G5KVXQ\Spline-based_parameter_varying_output_feedback_synthesis_with_improved_L2_gain.pdf}
+  file = {C:\Users\ethan\Zotero\storage\YICMIF4E\Spline-based_parameter_varying_output_feedback_synthesis_with_improved_L2_gain.pdf}
 }
 
 @article{Xu2025,
+  title = {Discrete-{{Time Leader-Following Multiagent Systems}}: {{Saturation Constraints}} and {{Event-Triggered Control}}},
+  author = {Xu, Yicheng and Jabbari, Faryar},
+  year = 2025,
+  month = jun,
+  journal = {IEEE Transactions on Control of Network Systems},
+  volume = {12},
+  number = {2},
+  pages = {1354--1368},
+  issn = {2325-5870},
+  doi = {10.1109/TCNS.2024.3516578},
+  abstract = {In this article, we consider the performance of homogeneous agents tracking a leader under constraints. First, the synthesis conditions for unconstrained discrete-time dynamic output feedback are presented. To handle magnitude and rate constraints on actuation, we implement an antiwindup augmentation. In addition, to address the communication burden among agents, we incorporate an event-triggered mechanism into control synthesis. The dimension of the synthesis conditions is commensurate with that of a single agent and does not increase as the number of agents increases.},
+  file = {C:\Users\ethan\Zotero\storage\JTM7H3IU\Discrete-Time_Leader-following_Multi-Agent_Systems_Saturation_Constraints_and_Event-Triggered_Control.pdf}
+}
+
+@article{Xu2025a,
   title = {Distributed {{Optimization}} of {{Finite Condition Number}} for {{Laplacian Matrix}} in {{Multi-Agent Systems}}},
   author = {Xu, Yicheng and Jabbari, Faryar},
   year = 2025,
@@ -78,5 +85,5 @@
   eprint = {2507.06440},
   abstract = {This paper addresses the distributed optimization of the finite condition number of the Laplacian matrix in multi-agent systems. The finite condition number, defined as the ratio of the largest to the second smallest eigenvalue of the Laplacian matrix, plays an important role in determining the convergence rate and performance of consensus algorithms, especially in discrete-time implementations. We propose a fully distributed algorithm by regulating the node weights. The approach leverages max consensus, distributed power iteration, and consensus-based normalization for eigenvalue and eigenvector estimation, requiring only local communication and computation. Simulation results demonstrate that the proposed method achieves performance comparable to centralized LMI-based optimization, significantly improving consensus speed and multi-agent system performance. The framework can be extended to edge weight optimization and the scenarios with non-simple eigenvalues, highlighting its scalability and practical applicability for large-scale networked systems.},
   archiveprefix = {arXiv},
-  file = {C:\Users\ethan\Zotero\storage\QK6YV9IY\Distributed Optimization of Finite Condition Number for Laplacian Matrix in Multi-Agent Systems.pdf}
+  file = {C:\Users\ethan\Zotero\storage\NPHHTWJN\Distributed Optimization of Finite Condition Number for Laplacian Matrix in Multi-Agent Systems.pdf}
 }

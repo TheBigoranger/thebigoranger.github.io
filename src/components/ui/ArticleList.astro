@@ -3,23 +3,183 @@ interface Props {
   listTitle: string;
   listItems: {
     title: string;
-    journal: string;
-    time: string;
+    authors?: string;       // may contain <strong> tags
+    venue?: string;
+    journal?: string;
+    year?: string | number;
+    doi?: string;
+    arxiv?: string;
+    url?: string;
+    time?: string;          // ignored for filtering but allowed
   }[];
 }
-const {listTitle, listItems} = Astro.props
+
+const { listTitle, listItems } = Astro.props;
+
+const currentYear = new Date().getFullYear();
+const cutoffYear = currentYear - 2;
+
+function extractYear(year: string | number | undefined): number | null {
+  if (!year) return null;
+  const y = Number(year);
+  return Number.isNaN(y) ? null : y;
+}
+
+// 1. Filter last 3 years
+let filtered = listItems.filter((item) => {
+  const y = extractYear(item.year);
+  return y !== null && y >= cutoffYear;
+});
+
+// Fallback: show all if none match
+if (filtered.length === 0) filtered = listItems;
+
+// 2. Sort newest → oldest
+filtered.sort((a, b) => {
+  const ya = extractYear(a.year) ?? 0;
+  const yb = extractYear(b.year) ?? 0;
+  return yb - ya;
+});
+
+// 3. Group by year
+const groups: Record<number, typeof filtered> = {};
+for (const item of filtered) {
+  const y = extractYear(item.year);
+  if (y === null) continue;
+  if (!groups[y]) groups[y] = [];
+  groups[y].push(item);
+}
+
+const sortedYears = Object.keys(groups)
+  .map(Number)
+  .sort((a, b) => b - a);
+
+const hasYearGroups = sortedYears.length > 0;
 ---
 
-<h2 class='text-3xl font-bold mb-8'>{listTitle}</h2>
-		<div class='space-y-6'>
-			{
-				listItems.map(item => (
-					<div class='p-6 rounded-lg text-base-content bg-base-200'>
-						<h3 class='text-xl font-semibold mb-2'>{item.title}</h3>
-						<p >
-							{item.journal} • {item.time}
-						</p>
-					</div>
-				))
-			}
-		</div>
+<h2 class="text-3xl font-bold mb-4">{listTitle}</h2>
+
+{hasYearGroups ? (
+  <>
+    {sortedYears.map((year) => (
+      <section>
+        <h3 class="text-lg font-semibold mt-6 mb-2">{year}</h3>
+
+        <ol class="space-y-2 list-decimal ml-5">
+          {groups[year].map((item) => {
+            const hasAuthors =
+              typeof item.authors === "string" &&
+              item.authors.trim().length > 0;
+
+            return (
+              <li class="text-base leading-relaxed">
+                {/* AUTHORS (optional, NO trailing dot) */}
+                {hasAuthors && (
+                  <>
+                    <span innerHTML={item.authors} />
+                    {" "}
+                  </>
+                )}
+
+                {/* TITLE */}
+                <span class="font-semibold">{item.title}</span>
+                {". "}
+
+                {/* VENUE */}
+                {(item.venue || item.journal) && (
+                  <>
+                    {item.venue ?? item.journal}
+                    {", "}
+                  </>
+                )}
+
+                {/* YEAR */}
+                {item.year}
+                {"."}
+
+                {/* LINKS */}
+                <span class="text-sm text-base-content/70 space-x-3 ml-2">
+                  {item.doi && (
+                    <a
+                      href={`https://doi.org/${item.doi}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      DOI
+                    </a>
+                  )}
+                  {item.arxiv && (
+                    <a href={item.arxiv} target="_blank" rel="noreferrer">
+                      arXiv
+                    </a>
+                  )}
+                  {!item.doi && !item.arxiv && item.url && (
+                    <a href={item.url} target="_blank" rel="noreferrer">
+                      Link
+                    </a>
+                  )}
+                </span>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+    ))}
+  </>
+) : (
+  // If no year groups, just list them plainly
+  <ol class="space-y-2 list-decimal ml-5">
+    {filtered.map((item) => {
+      const hasAuthors =
+        typeof item.authors === "string" &&
+        item.authors.trim().length > 0;
+
+      return (
+        <li class="text-base leading-relaxed">
+          {hasAuthors && (
+            <>
+              <span innerHTML={item.authors} />
+              {" "}
+            </>
+          )}
+
+          <span class="font-semibold">{item.title}</span>
+          {". "}
+
+          {(item.venue || item.journal) && (
+            <>
+              {item.venue ?? item.journal}
+              {", "}
+            </>
+          )}
+
+          {item.year}
+          {"."}
+
+          <span class="text-sm text-base-content/70 space-x-3 ml-2">
+            {item.doi && (
+              <a
+                href={`https://doi.org/${item.doi}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                DOI
+              </a>
+            )}
+            {item.arxiv && (
+              <a href={item.arxiv} target="_blank" rel="noreferrer">
+                arXiv
+              </a>
+            )}
+            {!item.doi && !item.arxiv && item.url && (
+              <a href={item.url} target="_blank" rel="noreferrer">
+                Link
+              </a>
+            )}
+          </span>
+        </li>
+      );
+    })}
+  </ol>
+)}
+

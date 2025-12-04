@@ -102,6 +102,12 @@ export function loadBib(_filename: string) {
     const doi = cleanText(f.doi);
     const arxiv = cleanText(f.eprint); // arXiv ID，如果有的话
 
+    // NEW: abstract（支持 abstract / abstractNote / annote）
+    const abstract =
+      cleanText(f.abstract) ||
+      cleanText(f.abstractNote) ||
+      cleanText(f.annote);
+
     return {
       title,
       authors, // e.g. "Ong, Pio and Xu, Yicheng and ..."
@@ -110,9 +116,9 @@ export function loadBib(_filename: string) {
       link,
       doi,
       arxiv,
+      abstract, // <--- 新增字段
       key: entry.key,
       type: entry.type,
     };
   });
 }
-
