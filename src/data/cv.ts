@@ -3,12 +3,19 @@ const bibPublications = loadBib("Mypaper.bib");
 
 export const experiences = [
 	{
-		company: '',
-		time: '',
-		title: '',
+		company: 'University of California, Irvine',
+		time: 'Sep 2021 - Present',
+		title: 'Teaching Assistant / Instructor',
 		location: '',
-		description: '',
+		description: 'Assist Professor Faryar Jabbari in ENGRMAE 80: Dynamics',
 	},
+	{
+		company: 'Hacker Fab at UC Irvine',
+		time: 'Sep 2024 - Present',
+		title: 'Graduate Student Lead',
+		location: '',
+		description: 'Lead interdisciplinary research team at UCI’s branch of <a href="https://kevin200555.github.io/uci-hacker-fab-website/" class="underline text-blue-600" target="_blank">Irvine HackerFab</a>, which originated from <a href="https://ethanyxu.com/HackerFab" class="underline text-blue-600" target="_blank">Irvine HackerFab</a>',
+	}
 	// {
 	// 	company: 'Radium Institute (Institut du Radium)',
 	// 	time: '1914 - 1934',
@@ -21,21 +28,21 @@ export const experiences = [
 export const education = [
 	{
 		school: 'Southeast University',
-		time: '2016 - 2020',
+		time: 'Sep 2016 - Jun 2020',
 		degree: 'Bachelor\'s degree in Automation' ,
 		location: 'Nanjing, China',
 		description: '',
 	},
 	{
 		school: 'University of California, Irvine',
-		time: '2020 - 2021',
+		time: 'Sep 2020 - Jun 2021',
 		degree: 'Master\'s Degree in Mechanical Engineering ',
 		location: 'California, USA',
 		description: '',
 	},
 	{
 		school: 'Southeast University',
-		time: '2021 - now',
+		time: 'Sep 2021 - now',
 		degree: 'Ph.D. student in Mechanical Engineering' ,
 		location: 'California, USA',
 		description: '',
