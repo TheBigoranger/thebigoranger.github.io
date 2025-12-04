@@ -5,7 +5,9 @@ import CvTimeline from '@/components/ui/CvTimeline.astro'
 
 import type { Experience, Education, Publication } from '../types/cv'
 import List from '@/components/ui/List.astro'
-import PublicationsList from '@/components/ui/PublicationsList.astro'
+
+// 读取 fullName 用于高亮作者
+import { profile } from '@/settings'
 
 let orderedExperiences: Experience[] = []
 let orderedEducations: Education[] = []
@@ -14,76 +16,221 @@ let orderedPublications: Publication[] = []
 const orderElement = <T extends { time: string }>(a: T, b: T) => {
   const presentValues = ['present', 'now', 'current', 'today']
   if (
-			presentValues.includes(
-				(a['time'] as string)?.split(' - ')[1]?.toLowerCase()
-			)
-		) {
-			// If the date is 'present', it should be the first element
-			return -1
-		}
-		const dateA = new Date((a['time'] as string)?.split(' - ')[1])
-		const dateB = new Date((b['time'] as string)?.split(' - ')[1])
-		return dateB.getTime() - dateA.getTime()
+    presentValues.includes(
+      (a['time'] as string)?.split(' - ')[1]?.toLowerCase()
+    )
+  ) {
+    return -1
+  }
+  const dateA = new Date((a['time'] as string)?.split(' - ')[1])
+  const dateB = new Date((b['time'] as string)?.split(' - ')[1])
+  return dateB.getTime() - dateA.getTime()
 }
 
 if (experiences.length > 0) {
-	orderedExperiences = experiences.sort((a, b) => {
-		return orderElement(a, b)
-	})
+  orderedExperiences = experiences.sort((a, b) => orderElement(a, b))
 }
 
 if (education.length > 0) {
-	orderedEducations = education.sort((a, b) => {
-		return orderElement(a, b)
-	})
+  orderedEducations = education.sort((a, b) => orderElement(a, b))
 }
 
+/* ---------- NEW: sort publications by year (newest → oldest) ---------- */
 if (publications.length > 0) {
-	orderedPublications = publications.sort((a, b) => {
-		return orderElement(a, b)
-	})
+  orderedPublications = publications.sort((a, b) => {
+    const yearA = parseInt(a.year) || 0
+    const yearB = parseInt(b.year) || 0
+    return yearB - yearA
+  })
+}
+
+/* ---------- Helpers copied from papers.astro ---------- */
+
+const normalize = (s: string) => s.toLowerCase().replace(/[^a-z]/g, '')
+
+const nameFromSettings: string = (profile as any)?.fullName ?? ''
+
+const fullNameTokens = nameFromSettings
+  .replace(/dr\.\s*/i, '')
+  .trim()
+  .split(/\s+/)
+  .filter(Boolean)
+
+const myLastNameNorm =
+  fullNameTokens.length > 0
+    ? normalize(fullNameTokens[fullNameTokens.length - 1])
+    : ''
+
+const myFirstNameNorm =
+  fullNameTokens.length > 0 ? normalize(fullNameTokens[0]) : ''
+
+const getYear = (paper: any): string => paper.year || ''
+const getVenue = (paper: any): string => paper.venue || ''
+const getLink = (paper: any): string =>
+  paper.link || paper.pdf || paper.url || ''
+
+const toAuthorPieces = (
+  authors: any
+): { display: string; isMe: boolean }[] => {
+  if (!authors) return []
+
+  let s: string = String(authors).trim()
+  if (!s) return []
+
+  const rawAuthors = s
+    .split(/\s+and\s+/i)
+    .map((t) => t.trim())
+    .filter(Boolean)
+
+  const out: { display: string; isMe: boolean }[] = []
+
+  for (const raw of rawAuthors) {
+    let last = ''
+    let firsts = ''
+
+    if (raw.includes(',')) {
+      const parts = raw.split(',').map((x) => x.trim())
+      last = parts[0] || ''
+      firsts = parts.slice(1).join(' ')
+    } else {
+      const toks = raw.split(/\s+/)
+      firsts = toks.slice(0, -1).join(' ')
+      last = toks[toks.length - 1]
+    }
+
+    const display = `${firsts} ${last}`.replace(/\s+/g, ' ').trim()
+
+    const firstNorm = normalize(firsts.split(' ')[0] || '')
+    const lastNorm = normalize(last.split(' ').slice(-1)[0] || '')
+
+    const isMe =
+      myLastNameNorm &&
+      lastNorm === myLastNameNorm &&
+      firstNorm.startsWith(myFirstNameNorm)
+
+    out.push({ display, isMe })
+  }
+
+  return out
 }
 ---
 
 <Layout>
-	{
-		orderedEducations.length > 0 && (
-			<section class='mb-12'>
-				<h2 class='text-2xl font-bold mb-6 border-b pb-2'>
-					Education
-				</h2>
-				<CvTimeline elements={orderedEducations} colored={true} />
-			</section>
-		)
-	}
+  {
+    orderedEducations.length > 0 && (
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold mb-6 border-b pb-2">
+          Education
+        </h2>
+        <CvTimeline elements={orderedEducations} colored={true} />
+      </section>
+    )
+  }
 
-	{
-		orderedExperiences.length > 0 && (
-			<section class='mb-12'>
-				<h2 class='text-2xl font-bold mb-6 border-b pb-2'>
-					Experiences
-				</h2>
-				<CvTimeline elements={orderedExperiences} colored={true} />
-			</section>
-		)
-	}
+  {
+    orderedExperiences.length > 0 && (
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold mb-6 border-b pb-2">
+          Experiences
+        </h2>
+        <CvTimeline elements={orderedExperiences} colored={true} />
+      </section>
+    )
+  }
 
-	{
-		orderedPublications.length > 0 && (
-			<section class='mb-12'>
-				<h2 class='text-2xl font-bold mb-6 border-b pb-2'>
-					Last publications
-				</h2>
-				<PublicationsList elements={orderedPublications}/>
-			</section>
-		)
-	}
+  {
+    orderedPublications.length > 0 && (
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold mb-6 border-b pb-2">
+          Last publications
+        </h2>
 
-	{
-		skills.length > 0 && (
-			<section class='mb-12'>
-				<List listTitle='Skills' listItems={skills}/>
-			</section>
-		)
-	}
+        <ul class="space-y-2">
+          {orderedPublications.map((paper) => {
+            const year = getYear(paper)
+            const venue = getVenue(paper)
+            const link = getLink(paper)
+
+            const authors = toAuthorPieces(paper.authors)
+
+            const metaPieces: any[] = []
+            if (venue) metaPieces.push(<span><em>{venue}</em></span>)
+            if (year) metaPieces.push(<span>{year}</span>)
+
+            if (paper.doi) {
+              metaPieces.push(
+                <a
+                  href={`https://doi.org/${paper.doi}`}
+                  target="_blank"
+                  class="underline hover:no-underline"
+                >
+                  doi:{paper.doi}
+                </a>
+              )
+            } else if (paper.arxiv) {
+              metaPieces.push(
+                <a
+                  href={`https://arxiv.org/abs/${paper.arxiv}`}
+                  target="_blank"
+                  class="underline hover:no-underline"
+                >
+                  arXiv:{paper.arxiv}
+                </a>
+              )
+            }
+
+            return (
+              <li class="text-base leading-relaxed">
+                {year && <span class="font-semibold">[{year}] </span>}
+
+                <span>
+                  {authors.map((a, idx) => (
+                    <>
+                      {idx > 0 && <span>, </span>}
+                      {idx === authors.length - 1 && authors.length > 1 && (
+                        <span>and </span>
+                      )}
+                      {a.isMe ? <strong>{a.display}</strong> : a.display}
+                    </>
+                  ))}
+                  ,{' '}
+                </span>
+
+                <span>&quot;</span>
+                {link ? (
+                  <a
+                    href={link}
+                    target="_blank"
+                    class="font-semibold underline hover:no-underline"
+                  >
+                    {paper.title}
+                  </a>
+                ) : (
+                  <span class="font-semibold">{paper.title}</span>
+                )}
+                <span>&quot;, </span>
+
+                {metaPieces.map((piece, idx) => (
+                  <>
+                    {idx > 0 && <span>, </span>}
+                    {piece}
+                  </>
+                ))}
+              </li>
+            )
+          })}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    skills.length > 0 && (
+      <section class="mb-12">
+        <List listTitle="Skills" listItems={skills} />
+      </section>
+    )
+  }
+
 </Layout>
+
