@@ -4,17 +4,17 @@ const bibPublications = loadBib("Mypaper.bib");
 export const experiences = [
 	{
 		company: 'University of California, Irvine',
-		time: 'Sep 2021 - Present',
+		time: 'Sep 2021 - Now',
 		title: 'Teaching Assistant / Instructor',
 		location: '',
 		description: 'Assist Professor Faryar Jabbari in ENGRMAE 80: Dynamics',
 	},
 	{
 		company: 'Hacker Fab at UC Irvine',
-		time: 'Sep 2024 - Present',
+		time: 'Sep 2024 - Now',
 		title: 'Graduate Student Lead',
 		location: '',
-		description: 'Lead interdisciplinary research team at UCI’s branch of <a href="https://kevin200555.github.io/uci-hacker-fab-website/" class="underline text-blue-600" target="_blank">Irvine HackerFab</a>, which originated from <a href="https://ethanyxu.com/HackerFab" class="underline text-blue-600" target="_blank">Irvine HackerFab</a>',
+		description: 'Lead interdisciplinary research team at UCI’s branch of <a href="https://kevin200555.github.io/uci-hacker-fab-website/" class="underline text-blue-600" target="_blank">Irvine HackerFab</a>, which originated from <a href="https://ethanyxu.com/HackerFab" class="underline text-blue-600" target="_blank">HackerFab</a>',
 	}
 	// {
 	// 	company: 'Radium Institute (Institut du Radium)',
