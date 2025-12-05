@@ -14,8 +14,29 @@ export const experiences = [
 		time: 'Sep 2024 - Now',
 		title: 'Graduate Student Lead',
 		location: '',
-		description: 'Lead interdisciplinary research team at UCI’s branch of <a href="https://kevin200555.github.io/uci-hacker-fab-website/" class="underline text-blue-600" target="_blank">Irvine HackerFab</a>, which originated from <a href="https://ethanyxu.com/HackerFab" class="underline text-blue-600" target="_blank">HackerFab</a>',
-	}
+		description: 'Lead interdisciplinary research team at <a href="https://kevin200555.github.io/uci-hacker-fab-website/" class="underline text-blue-600" target="_blank">Irvine Hacker Fab</a> on lithography projects, which originated from <a href="https://ethanyxu.com/HackerFab" class="underline text-blue-600" target="_blank">HackerFab</a>',
+	},
+	{
+		company: 'UCI\'s Engineering Design in Industry Program',
+		time: 'Jan 2020 - Mar 2020',
+		title: 'Mechanical Engineer',
+		location: '',
+		description: 'Development of personal hygiene device for hot, damp, and sanitized towelette delivery, detailed in <a href="https://projects.eng.uci.edu/projects/2021-2022/edi-whoopy-wipes" class="underline text-blue-600" target="_blank">EDI Whoopy Wipes</a>. It is later commercialized on <a href="https://whoopywipes.com/" class="underline text-blue-600" target="_blank">WhoopyWipes.com</a>',
+	},
+	{
+		company: 'UCI\'s Engineering Design in Industry Program',
+		time: 'Sep 2019 - Dec 2019',
+		title: 'Mechanical Engineer',
+		location: '',
+		description: 'Develop hands-free, noninvasive clinical solution for enhanced blood vessel visualization',
+	},
+	{
+		company: 'Strategy consulting intern at PricewaterhouseCoopers',
+		time: 'Sep 2017 - Dec 2017',
+		title: 'Intership',
+		location: '',
+		description: 'Provide strategic consulting services to a prominent Electric and Electronic Manufacturing company',
+	},
 	// {
 	// 	company: 'Radium Institute (Institut du Radium)',
 	// 	time: '1914 - 1934',
