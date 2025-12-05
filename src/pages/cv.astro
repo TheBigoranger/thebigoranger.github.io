@@ -30,6 +30,7 @@ let orderedEducations: Education[] = []
 let orderedPublications: Publication[] = []
 let orderedPresentations: Presentation[] = []
 
+// For entries with "Sep 2024 - Present" style ranges (experiences / education)
 const orderElement = <T extends { time: string }>(a: T, b: T) => {
   const presentValues = ['present', 'now', 'current', 'today']
 
@@ -37,17 +38,28 @@ const orderElement = <T extends { time: string }>(a: T, b: T) => {
   const endB = (b.time as string)?.split(' - ')[1]?.toLowerCase()
 
   if (endA && presentValues.includes(endA)) {
-    // a is "present" → comes first
     return -1
   }
   if (endB && presentValues.includes(endB)) {
-    // b is "present" → comes first
     return 1
   }
 
   const dateA = new Date((a.time as string)?.split(' - ')[1])
   const dateB = new Date((b.time as string)?.split(' - ')[1])
   return dateB.getTime() - dateA.getTime()
+}
+
+// ✅ For presentations like "April 2025" (single date, not range)
+const parsePresentationTime = (time: string | undefined): number => {
+  if (!time) return 0
+  const t = time.toLowerCase().trim()
+  const presentValues = ['present', 'now', 'current', 'today']
+  if (presentValues.includes(t)) {
+    // put "Present" at the very top
+    return Number.MAX_SAFE_INTEGER
+  }
+  const d = new Date(time)
+  return isNaN(d.getTime()) ? 0 : d.getTime()
 }
 
 if (experiences.length > 0) {
@@ -58,8 +70,11 @@ if (education.length > 0) {
   orderedEducations = education.sort((a, b) => orderElement(a, b))
 }
 
+// ✅ Presentations: newest → oldest by their `time` string
 if (presentations && presentations.length > 0) {
-  orderedPresentations = presentations.sort((a, b) => orderElement(a, b))
+  orderedPresentations = presentations
+    .slice()
+    .sort((a, b) => parsePresentationTime(b.time) - parsePresentationTime(a.time))
 }
 
 // Publications: newest → oldest by year, via shared helper
@@ -103,6 +118,7 @@ if (publications.length > 0) {
             <li class="text-base leading-relaxed">
               <div class="flex justify-between gap-4">
                 <div>
+                  {/* title can contain LaTeX if you later switch to set:html */}
                   <div class="font-semibold">{p.title}</div>
                   <div class="text-sm text-muted-foreground">
                     {p.event}
