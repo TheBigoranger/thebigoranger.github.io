@@ -108,3 +108,34 @@ export const publications = bibPublications;
 //	// 	abstract: 'Early research leading to the identification of uranium’s radioactive properties.',
 //	// },
 //];
+//
+
+
+// New: presentations / conferences
+export const presentations = [
+	{
+		title: 'Distributed optimization of the finite condition number of the Laplacian matrix',
+		event: '45th Southern California Control Workshop',
+		time: 'April 2025'		,
+		link: 'http://terrano.ucsd.edu/jorge/sccw/program.html',
+		linkText: 'program',
+	},
+	{
+		title: 'Spline-based parameter varying output feedback synthesis with improved $L_2$ gain',
+		event: '45th Southern California Control Workshop',
+		time: 'April 2025'		,
+		link: 'http://terrano.ucsd.edu/jorge/sccw/program.html',
+		linkText: 'program',
+	},
+  	// Example template (fill with real data and remove the comments):
+  // {
+  //   title: 'Safety-Critical Control of Multi-Agent Systems',
+  //   event: 'American Control Conference (ACC)',
+  //   time: 'Jul 2024',
+  //   location: 'Denver, CO, USA',
+  //   link: ' ',
+  //   linkText : ' ' ,
+  //   // You can use plain text or HTML links here:
+  //   description: 'Contributed talk on control barrier functions for multi-agent coordination.',
+  // },
+];

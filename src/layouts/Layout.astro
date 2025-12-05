@@ -22,7 +22,6 @@ const {
 	image = seo.default_image,
 } = Astro.props
 ---
-
 <!doctype html>
 <html lang='en'>
 	<head>
@@ -30,9 +29,29 @@ const {
 
 		<Head title={title} description={description} image={image} />
 
+		<!-- 🔹 KaTeX: CSS for rendering equations -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+		/>
 
-
+		<!-- 🔹 KaTeX: JS + auto-render (fires on load) -->
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+			onload="renderMathInElement(document.body, {
+				delimiters: [
+					{ left: '$$', right: '$$', display: true },
+					{ left: '$', right: '$', display: false },
+					{ left: '\\\\(', right: '\\\\)', display: false },
+					{ left: '\\\\[', right: '\\\\]', display: true }
+				]
+			});"
+		></script>
+		<!-- 🔹 End KaTeX -->
 	</head>
+
 	<body>
 		<div class={`bg-base-100 drawer lg:drawer-open ${template.menu_left ? 'drawer-end' : ''}`}>
 			<input id='my-drawer' type='checkbox' class='drawer-toggle' />
@@ -43,7 +62,6 @@ const {
 						<div class='navbar-start'>
 							{template.menu_left &&
 								<DarkLightController/>
-								/* <ThemeSelector transition:persist /> */
 							}
 							<label for='my-drawer' class='btn btn-square btn-ghost lg:hidden'>
 								<BetterIcon>
@@ -62,28 +80,30 @@ const {
 								</BetterIcon>
 							</label>
 						</div>
+
 						<div class='navbar-center lg:hidden text-lg font-black'>
 							{profile.title}
 							{profile.fullName}
 						</div>
+
 						<div class='navbar-end'>
 							{!template.menu_left &&
 								<DarkLightController/>
-								/* <ThemeSelector transition:persist /> */
 							}
 						</div>
 					</nav>
 				</div>
+
                 <main class='p-8 pt-10 lg:pt-16 lg:max-w-5xl max-w-full mx-auto min-h-screen flex flex-col justify-between'>
 					<!-- Page content -->
 					<slot />
-				<Footer />
+					<Footer />
 				</main>
 			</div>
+
 			<!-- Drawer side -->
 			<div class='drawer-side z-40'>
-				<label for='my-drawer' aria-label='close sidebar' class='drawer-overlay'
-				></label>
+				<label for='my-drawer' aria-label='close sidebar' class='drawer-overlay'></label>
 				<Navbar />
 			</div>
 		</div>
@@ -103,3 +123,4 @@ const {
 		height: 100%;
 	}
 </style>
+

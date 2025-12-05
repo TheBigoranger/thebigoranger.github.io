@@ -1,9 +1,20 @@
 ---
 import Layout from '@/layouts/Layout.astro'
-import { experiences, education, skills, publications } from '../data/cv'
+import {
+  experiences,
+  education,
+  skills,
+  publications,
+  presentations,
+} from '../data/cv'
 import CvTimeline from '@/components/ui/CvTimeline.astro'
 
-import type { Experience, Education, Publication } from '../types/cv'
+import type {
+  Experience,
+  Education,
+  Publication,
+  Presentation,
+} from '../types/cv'
 import List from '@/components/ui/List.astro'
 
 import {
@@ -17,18 +28,25 @@ import {
 let orderedExperiences: Experience[] = []
 let orderedEducations: Education[] = []
 let orderedPublications: Publication[] = []
+let orderedPresentations: Presentation[] = []
 
 const orderElement = <T extends { time: string }>(a: T, b: T) => {
   const presentValues = ['present', 'now', 'current', 'today']
-  if (
-    presentValues.includes(
-      (a['time'] as string)?.split(' - ')[1]?.toLowerCase(),
-    )
-  ) {
+
+  const endA = (a.time as string)?.split(' - ')[1]?.toLowerCase()
+  const endB = (b.time as string)?.split(' - ')[1]?.toLowerCase()
+
+  if (endA && presentValues.includes(endA)) {
+    // a is "present" → comes first
     return -1
   }
-  const dateA = new Date((a['time'] as string)?.split(' - ')[1])
-  const dateB = new Date((b['time'] as string)?.split(' - ')[1])
+  if (endB && presentValues.includes(endB)) {
+    // b is "present" → comes first
+    return 1
+  }
+
+  const dateA = new Date((a.time as string)?.split(' - ')[1])
+  const dateB = new Date((b.time as string)?.split(' - ')[1])
   return dateB.getTime() - dateA.getTime()
 }
 
@@ -40,7 +58,11 @@ if (education.length > 0) {
   orderedEducations = education.sort((a, b) => orderElement(a, b))
 }
 
-// sort publications by year (newest → oldest) using shared utils
+if (presentations && presentations.length > 0) {
+  orderedPresentations = presentations.sort((a, b) => orderElement(a, b))
+}
+
+// Publications: newest → oldest by year, via shared helper
 if (publications.length > 0) {
   orderedPublications = sortPublicationsNewToOld(publications)
 }
@@ -65,6 +87,54 @@ if (publications.length > 0) {
           Experiences
         </h2>
         <CvTimeline elements={orderedExperiences} colored={true} />
+      </section>
+    )
+  }
+
+  {
+    orderedPresentations.length > 0 && (
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold mb-6 border-b pb-2">
+          Presentations &amp; Conferences
+        </h2>
+
+        <ul class="space-y-3">
+          {orderedPresentations.map((p) => (
+            <li class="text-base leading-relaxed">
+              <div class="flex justify-between gap-4">
+                <div>
+                  <div class="font-semibold">{p.title}</div>
+                  <div class="text-sm text-muted-foreground">
+                    {p.event}
+                    {p.location && <> · {p.location}</>}
+                  </div>
+                </div>
+
+                <div class="text-sm text-muted-foreground text-right">
+                  <div>{p.time}</div>
+                  {p.link && (
+                    <div>
+                      <a
+                        href={p.link}
+                        target="_blank"
+                        class="underline hover:no-underline font-medium text-blue-600"
+                      >
+                        {p.linkText ? p.linkText : 'Link'}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {p.description && (
+                <div
+                  class="text-sm mt-1 text-muted-foreground"
+                  set:html={p.description}
+                ></div>
+              )}
+            </li>
+          ))}
+        </ul>
       </section>
     )
   }
@@ -96,7 +166,7 @@ if (publications.length > 0) {
                   class="underline hover:no-underline"
                 >
                   doi:{paper.doi}
-                </a>,
+                </a>
               )
             } else if (paper.arxiv) {
               metaPieces.push(
@@ -106,7 +176,7 @@ if (publications.length > 0) {
                   class="underline hover:no-underline"
                 >
                   arXiv:{paper.arxiv}
-                </a>,
+                </a>
               )
             }
 
@@ -114,6 +184,7 @@ if (publications.length > 0) {
               <li class="text-base leading-relaxed">
                 {year && <span class="font-semibold">[{year}] </span>}
 
+                {/* Authors */}
                 <span>
                   {authors.map((a, idx) => (
                     <>
@@ -127,6 +198,7 @@ if (publications.length > 0) {
                   ,{' '}
                 </span>
 
+                {/* Title */}
                 <span>&quot;</span>
                 {link ? (
                   <a
@@ -141,6 +213,7 @@ if (publications.length > 0) {
                 )}
                 <span>&quot;, </span>
 
+                {/* Venue + year + DOI / arXiv */}
                 {metaPieces.map((piece, idx) => (
                   <>
                     {idx > 0 && <span>, </span>}
