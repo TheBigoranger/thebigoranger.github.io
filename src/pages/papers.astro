@@ -1,107 +1,16 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import { publications as RAW_PUBLICATIONS } from "@/data/cv";
-import { profile } from "@/settings";
+import Layout from '@/layouts/Layout.astro'
+import { publications as RAW_PUBLICATIONS } from '@/data/cv'
 
-/* ---------------------- Normalize Helper ---------------------- */
-const normalize = (s: string) =>
-  s.toLowerCase().replace(/[^a-z]/g, "");
+import {
+  getYear,
+  getVenue,
+  getLink,
+  toAuthorPieces,
+  sortPublicationsNewToOld,
+} from '@/lib/publications'
 
-/* ---------------------- Read fullName from settings.ts ---------------------- */
-
-const nameFromSettings: string =
-  (profile as any)?.fullName ??
-  "";   // 如果没有 fullName，就变成空串
-
-// tokenize: ["Yicheng", "Xu"]
-const fullNameTokens = nameFromSettings
-  .replace(/dr\.\s*/i, "")
-  .trim()
-  .split(/\s+/)
-  .filter(Boolean);
-
-// normalized last name
-const myLastNameNorm =
-  fullNameTokens.length > 0
-    ? normalize(fullNameTokens[fullNameTokens.length - 1])
-    : "";
-
-// normalized first name
-const myFirstNameNorm =
-  fullNameTokens.length > 0
-    ? normalize(fullNameTokens[0])
-    : "";
-
-/* ---------------------- Helper Functions ---------------------- */
-
-const getYear = (paper: any): string => paper.year || "";
-const getVenue = (paper: any): string => paper.venue || "";
-const getLink = (paper: any): string =>
-  paper.link || paper.pdf || paper.url || "";
-
-/**
- * Parse BibTeX-style authors:
- *   "Ong, Pio and Xu, Yicheng and Bena, Ryan M."
- * → ["Pio Ong", "Yicheng Xu", "Ryan M. Bena"]
- */
-const toAuthorPieces = (
-  authors: any
-): { display: string; isMe: boolean }[] => {
-  if (!authors) return [];
-
-  let s: string = String(authors).trim();
-  if (!s) return [];
-
-  // Split authors by " and "
-  const rawAuthors = s
-    .split(/\s+and\s+/i)
-    .map((t) => t.trim())
-    .filter(Boolean);
-
-  const out: { display: string; isMe: boolean }[] = [];
-
-  for (const raw of rawAuthors) {
-    let last = "";
-    let firsts = "";
-
-    if (raw.includes(",")) {
-      // "Last, First Middle"
-      const parts = raw.split(",").map((x) => x.trim());
-      last = parts[0] || "";
-      firsts = parts.slice(1).join(" ");
-    } else {
-      // Fallback: "First Middle Last"
-      const toks = raw.split(/\s+/);
-      firsts = toks.slice(0, -1).join(" ");
-      last = toks[toks.length - 1];
-    }
-
-    const display = `${firsts} ${last}`.replace(/\s+/g, " ").trim();
-
-    // normalize first and last token
-    const firstNorm = normalize(firsts.split(" ")[0] || "");
-    const lastNorm = normalize(last.split(" ").slice(-1)[0] || "");
-
-    // MATCH RULE：
-    //   last name 必须完全一样
-    //   first name 开头需要匹配
-    const isMe =
-      myLastNameNorm &&
-      lastNorm === myLastNameNorm &&
-      firstNorm.startsWith(myFirstNameNorm);
-
-    out.push({ display, isMe });
-  }
-
-  return out;
-};
-
-// Sort publication list (new → old)
-const ALL_PAPERS = [...RAW_PUBLICATIONS].sort((a, b) => {
-  const ya = Number(getYear(a) || 0);
-  const yb = Number(getYear(b) || 0);
-  return yb - ya;
-});
+const ALL_PAPERS = sortPublicationsNewToOld(RAW_PUBLICATIONS)
 ---
 
 <Layout title="Papers">
@@ -110,15 +19,15 @@ const ALL_PAPERS = [...RAW_PUBLICATIONS].sort((a, b) => {
 
     <ul class="space-y-2">
       {ALL_PAPERS.map((paper) => {
-        const year = getYear(paper);
-        const venue = getVenue(paper);
-        const link = getLink(paper);
+        const year = getYear(paper)
+        const venue = getVenue(paper)
+        const link = getLink(paper)
 
-        const authors = toAuthorPieces(paper.authors);
+        const authors = toAuthorPieces(paper.authors)
 
-        const metaPieces: any[] = [];
-        if (venue) metaPieces.push(<span><em>{venue}</em></span>);
-        if (year) metaPieces.push(<span>{year}</span>);
+        const metaPieces: any[] = []
+        if (venue) metaPieces.push(<span><em>{venue}</em></span>)
+        if (year) metaPieces.push(<span>{year}</span>)
 
         if (paper.doi) {
           metaPieces.push(
@@ -128,8 +37,8 @@ const ALL_PAPERS = [...RAW_PUBLICATIONS].sort((a, b) => {
               class="underline hover:no-underline"
             >
               doi:{paper.doi}
-            </a>
-          );
+            </a>,
+          )
         } else if (paper.arxiv) {
           metaPieces.push(
             <a
@@ -138,13 +47,12 @@ const ALL_PAPERS = [...RAW_PUBLICATIONS].sort((a, b) => {
               class="underline hover:no-underline"
             >
               arXiv:{paper.arxiv}
-            </a>
-          );
+            </a>,
+          )
         }
 
         return (
           <li class="text-base leading-relaxed">
-
             {/* [YEAR] */}
             {year && <span class="font-semibold">[{year}] </span>}
 
@@ -153,12 +61,13 @@ const ALL_PAPERS = [...RAW_PUBLICATIONS].sort((a, b) => {
               {authors.map((a, idx) => (
                 <>
                   {idx > 0 && <span>, </span>}
-                  {idx === authors.length - 1 &&
-                    authors.length > 1 && <span>and </span>}
+                  {idx === authors.length - 1 && authors.length > 1 && (
+                    <span>and </span>
+                  )}
                   {a.isMe ? <strong>{a.display}</strong> : a.display}
                 </>
               ))}
-              ,{" "}
+              ,{' '}
             </span>
 
             {/* TITLE */}
@@ -183,9 +92,8 @@ const ALL_PAPERS = [...RAW_PUBLICATIONS].sort((a, b) => {
                 {piece}
               </>
             ))}
-
           </li>
-        );
+        )
       })}
     </ul>
   </div>
