@@ -6,7 +6,7 @@ export const experiences = [
 		company: 'University of California, Irvine',
 		time: 'Sep 2021 - Now',
 		title: 'Teaching Assistant / Instructor',
-		location: '',
+		location: 'Irvine, CA, USA',
 		description: 'Assist Professor Faryar Jabbari in ENGRMAE 80: Dynamics',
 	},
 	{
@@ -20,21 +20,21 @@ export const experiences = [
 		company: 'UCI\'s Engineering Design in Industry Program',
 		time: 'Jan 2020 - Mar 2020',
 		title: 'Mechanical Engineer',
-		location: '',
+		location: 'Irvine, CA, USA',
 		description: 'Development of personal hygiene device for hot, damp, and sanitized towelette delivery, detailed in <a href="https://projects.eng.uci.edu/projects/2021-2022/edi-whoopy-wipes" class="underline text-blue-600" target="_blank">EDI Whoopy Wipes</a>. It is later commercialized on <a href="https://whoopywipes.com/" class="underline text-blue-600" target="_blank">WhoopyWipes.com</a>',
 	},
 	{
 		company: 'UCI\'s Engineering Design in Industry Program',
 		time: 'Sep 2019 - Dec 2019',
 		title: 'Mechanical Engineer',
-		location: '',
+		location: 'Irvine, CA, USA',
 		description: 'Develop hands-free, noninvasive clinical solution for enhanced blood vessel visualization',
 	},
 	{
-		company: 'Strategy consulting intern at PricewaterhouseCoopers',
+		company: 'PricewaterhouseCoopers',
 		time: 'Sep 2017 - Dec 2017',
-		title: 'Intership',
-		location: '',
+		title: 'Strategy consulting Intership',
+		location: 'Shanghai, China',
 		description: 'Provide strategic consulting services to a prominent Electric and Electronic Manufacturing company',
 	},
 	// {
@@ -50,21 +50,24 @@ export const education = [
 	{
 		school: 'Southeast University',
 		time: 'Sep 2016 - Jun 2020',
-		degree: 'Bachelor\'s degree in Automation' ,
+		degree: 'Bachelor of Science' ,
+		major: 'Automation',
 		location: 'Nanjing, China',
 		description: '',
 	},
 	{
 		school: 'University of California, Irvine',
 		time: 'Sep 2020 - Jun 2021',
-		degree: 'Master\'s Degree in Mechanical Engineering ',
+		degree: 'Master of Science',
+		major: 'Mechanical Engineering',
 		location: 'California, USA',
 		description: '',
 	},
 	{
-		school: 'Southeast University',
+		school: 'University of California, Irvine',
 		time: 'Sep 2021 - now',
-		degree: 'Ph.D. student in Mechanical Engineering' ,
+		degree: 'Ph.D. candidate' ,
+		major: 'Mechanical Engineering',
 		location: 'California, USA',
 		description: '',
 	},
@@ -74,17 +77,6 @@ export const education = [
 	// 	degree: 'Master’s in Physics and Mathematics',
 	// 	location: 'Paris, France',
 	// 	description: 'Graduated at the top of her class in physics and second in mathematics.',
-	// },
-];
-
-export const skills = [
-	{
-		title: '',
-		description: '',
-	},
-	// {
-	// 	title: 'Experimental Techniques',
-	// 	description: 'Spectroscopy, Isolation of Radioactive Elements, Radiation Measurement',
 	// },
 ];
 
@@ -166,3 +158,35 @@ export const presentations = [
   //   description: 'Contributed talk on control barrier functions for multi-agent coordination.',
   // },
 ];
+
+export const skills = [
+	{
+		title:'Program Language',
+		description: 'Matlab, Python, C/C++, Shell, LaTex, HTML',
+	},
+
+	{
+		title: 'Control Theory',
+		description: 'PID Control, Nonlinear Control, Robust Control ($H_{\\infty}$ , $l_2$ gain and gain scheduling),  Event-Triggered Control, Control Barrier Function, Multi-Agent System, Anti-Windup Control, MPC, LQR',
+	},
+
+	{
+		title:'Mechanical Engineering',
+		description: '3D printing, CAD(Solidworks), Lagrangian Mechanic, System Model via first principle, System Identification via Bode Plot, Linear Time-Invariant System, '
+	},
+
+	{
+		title:'Electric Engineering',
+		description:'Micro-Controller Develop (Arduino, STM32, RaspberryPi), PCB desgin(Altium Designer, Easy EDA, KiCad), Oscilloscopes, Soldering, Circuits and Signals, Power \& Energy System (AC,DC), DSP',
+	},
+
+	{
+		title:'Optimization',
+		description: 'Convex Optimization, Semi-definite Programming, Numerical Methods (Augmented Lagrangian, Interior Point Method, variations of Newton\'s method), ADMM',
+	}	
+	// {
+	// 	title: 'Experimental Techniques',
+	// 	description: 'Spectroscopy, Isolation of Radioactive Elements, Radiation Measurement',
+	// },
+];
+
