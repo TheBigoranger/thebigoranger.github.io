@@ -3,7 +3,28 @@ import { Image } from 'astro:assets'
 
 import SocialIcons from './SocialIcons.astro'
 
+import SocialIcons from "./SocialIcons.astro";
+import { selfDescription } from "../../data/cv_plain";
 
+type LinkDef = {
+  match: string;
+  url: string;
+};
+
+function applyLinks(text: string, links: LinkDef[]): string {
+  let result = text;
+  for (const link of links) {
+    const escaped = link.match.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(escaped, "g");
+    result = result.replace(
+      regex,
+      `<a href="${link.url}" style="color:blue">${link.match}</a>`
+    );
+  }
+  return result;
+}
+
+const heroHTML = applyLinks(selfDescription.text.trim(), selfDescription.links);
 const {fullName, title, institute, profilePicture} = Astro.props
 ---
 <div class='flex-1'>
@@ -11,9 +32,7 @@ const {fullName, title, institute, profilePicture} = Astro.props
     Hi! I'm <span class='text-secondary'>{fullName}</span>
   </h1>
   <p class='text-xl text-gray-600 mb-4'>{title}{institute ? ` at ${institute}` : ''}</p>
-  <p class='text-lg mb-6'>
-    I am a Ph.D. student at UC Irvine studying Systems and Control under the supervision of the professor <a href = "https://engineering.uci.edu/users/faryar-jabbari" style = "color:blue">Faryar Jabbari</a>. I have an education background in mechanical engineering, especially on optimization and control theory. My current interest is multi-agent system, Anti-windup control, event-triggered control, linear parameter varying systems, distributed optimization on graph, and control barrier function.
-  </p>
+  <p class="text-lg mb-6" set:html={heroHTML}></p>
   <div class='flex gap-4'>
     <SocialIcons />
   </div>
