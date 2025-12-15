@@ -6,6 +6,7 @@ import {
   education,
   presentations,
   skills,
+  selfDescription,
 } from "../data/cv_plain";
 
 // ======================
@@ -29,48 +30,32 @@ const MONTH_INDEX: Record<string, number> = {
 };
 
 /**
- * Parse the *start* date from a "time" string into a sortable number.
- *
- * Supports things like:
- *  - "Sep 2021 - Now"
- *  - "Jan 2020 - Mar 2020"
- *  - "Sep 2016 - Jun 2020"
- *  - "April 2025"
- *  - "Dec 2022"
- *  - "Jul 2024"
- *  - "Oct 2019"
+ * Parse the start date from a "time" string into a sortable number.
  */
 function parseStartMonthIndex(time: string): number {
-  // Grab the first "<Month> <Year>" pattern.
-  // Accept 3–9 letters for the month name (so "Apr", "April", "September", etc.).
   const re = /([A-Za-z]{3,9})\s+(\d{4})/;
   const m = time.match(re);
-  if (!m) return 0; // fallback for unexpected formats
+  if (!m) return 0;
 
-  const monthKey = m[1].slice(0, 3).toLowerCase(); // use first 3 letters
+  const monthKey = m[1].slice(0, 3).toLowerCase();
   const month = MONTH_INDEX[monthKey] ?? 1;
   const year = parseInt(m[2], 10) || 0;
 
-  // Encode as "year * 12 + month" → sortable chronologically
   return year * 12 + month;
 }
 
 /**
- * Generic sorter for arrays with a "time" field.
- * Sorts from newest → oldest (descending).
+ * Generic sorter: newest → oldest
  */
 const sortByTimeDescending = <T extends { time: string }>(arr: T[]): T[] =>
   arr
-    .slice() // avoid mutating original array
-    .sort(
-      (a, b) => parseStartMonthIndex(b.time) - parseStartMonthIndex(a.time),
-    );
+    .slice()
+    .sort((a, b) => parseStartMonthIndex(b.time) - parseStartMonthIndex(a.time));
 
 // ======================
 // Target directory
 // ======================
 
-// Absolute path on your server for the CV files
 const targetDir = "/var/www/CV-Yicheng-Xu";
 
 if (!fs.existsSync(targetDir)) {
@@ -82,13 +67,11 @@ if (!fs.existsSync(targetDir)) {
 // ======================
 
 const cvData = {
-  // Sort ALL time-based sections from new → old
   experiences: sortByTimeDescending(experiences),
   education: sortByTimeDescending(education),
   presentations: sortByTimeDescending(presentations),
-
-  // Skills have no time field; keep defined order
   skills,
+  selfDescription, // include raw selfDescription so JSON consumers can use it
 };
 
 const jsonPath = path.join(targetDir, "cv_plain.json");
@@ -96,11 +79,11 @@ const jsonPath = path.join(targetDir, "cv_plain.json");
 fs.writeFileSync(jsonPath, JSON.stringify(cvData, null, 2), "utf-8");
 console.log(`Wrote cv_plain.json to: ${jsonPath}`);
 
+
 // ======================
 // Copy Mypaper.bib
 // ======================
 
-// Assumes you run this script from the project root, e.g. /var/www/Portfolio
 const projectRoot = process.cwd();
 const bibSource = path.join(projectRoot, "src", "data", "Mypaper.bib");
 const bibTarget = path.join(targetDir, "Mypaper.bib");
@@ -112,5 +95,38 @@ if (!fs.existsSync(bibSource)) {
 fs.copyFileSync(bibSource, bibTarget);
 console.log(`Copied Mypaper.bib → ${bibTarget}`);
 
-console.log("Export complete: sorted cv_plain.json + Mypaper.bib");
+
+// ======================
+// Generate selfDescription.tex
+// ======================
+
+type LinkDef = { match: string; url: string };
+
+function toLatexParagraph(text: string, links: LinkDef[]): string {
+  let out = text.trim();
+
+  // Convert each link match → \href{}
+  for (const link of links) {
+    const escaped = link.match.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(escaped, "g");
+    out = out.replace(regex, `\\href{${link.url}}{${link.match}}`);
+  }
+
+  // Collapse whitespace
+  out = out.replace(/\s+/g, " ");
+
+  return out;
+}
+
+const selfDescTex = toLatexParagraph(
+  selfDescription.text,
+  selfDescription.links ?? []
+);
+
+const texPath = path.join(targetDir, "selfDescription.tex");
+
+fs.writeFileSync(texPath, selfDescTex + "\n", "utf-8");
+console.log(`Wrote selfDescription.tex → ${texPath}`);
+
+console.log("Export complete: sorted cv_plain.json + Mypaper.bib + selfDescription.tex");
 

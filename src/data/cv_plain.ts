@@ -1,7 +1,5 @@
 export const selfDescription = {
-  text: `
-I am a Ph.D. student at UC Irvine studying Systems and Control under the supervision of Professor Faryar Jabbari. I have an education background in mechanical engineering, especially on optimization and control theory. My current interest is multi-agent systems, anti-windup control, event-triggered control, linear parameter varying systems, distributed optimization on graphs, and control barrier functions.
-  `,
+  text: `I am a Ph.D. student at UC Irvine studying Systems and Control under the supervision of Professor Faryar Jabbari. I have an education background in mechanical engineering, especially on optimization and control theory. My current interest is multi-agent systems, anti-windup control, event-triggered control, linear parameter varying systems, distributed optimization on graphs, and control barrier functions.  `,
   links: [
     {
       match: "Faryar Jabbari",
@@ -64,7 +62,7 @@ export const education = [
 		degree: 'Bachelor of Science' ,
 		major: 'Automation',
 		location: 'Nanjing, China',
-		description: '',
+		description: 'Exchange at UC Irvine in the fourth year',
 		gpa: '3.6/4.0',
 	},
 	{
