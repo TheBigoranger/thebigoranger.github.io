@@ -1,24 +1,32 @@
 export const links = [
-  {
+  	{
       text: 'Faryar Jabbari',
       url: 'https://engineering.uci.edu/users/faryar-jabbari',
     },
-  {
-      text: 'Irvine Hacker Fab',
+  	{
+      text: 'https://ethanyxu.com/IrvineHackerFab',
       url: 'https://kevin200555.github.io/uci-hacker-fab-website/',
     },
-  {
-      text: 'HackerFab',
-      url: 'https://ethanyxu.com/HackerFab',
-    },
-  {
+	{
+	  text: 'Hacker Fab',
+	  url: 'https://docs.hackerfab.org/home',
+	},
+	{
+	  text: 'https://ethanyxu.com/UROP',
+	  url: 'https://ethanyxu.com/UROP',
+	},
+  	{
       text: 'EDI Whoopy Wipes',
       url: 'https://projects.eng.uci.edu/projects/2021-2022/edi-whoopy-wipes',
-    },
-  {
+	},
+  	{
       text: 'WhoopyWipes.com',
       url: 'https://whoopywipes.com/',
-    },
+	},
+	{
+	  text: 'https://ethanyxu.com/WhoopyWipes',
+	  url: "https://ethanyxu.com/WhoopyWipes",
+	}
 ];
 
 export const selfDescription = {
@@ -32,7 +40,13 @@ export const experiences = [
 		title: 'Teaching Assistant / Instructor',
 		location: 'Irvine, CA, USA',
 		tag: 'academic',
+		skills: 'Teaching, Communication',
 		description: 'Assist Professor Faryar Jabbari in ENGRMAE 80: Dynamics',
+		details: [
+			"Assist Professor Faryar Jabbari in teaching ENGRMAE 80: Dynamics at University of California, Irvine",
+			"Deliver one-on-one support to enhance student understanding of complex dynamics concepts",
+			"Evaluate and grade homework assignments and exams, ensuring fair assessment",
+		]
 	},
 	{
 		company: 'Hacker Fab at UC Irvine',
@@ -40,7 +54,13 @@ export const experiences = [
 		title: 'Graduate Student Lead',
 		location: '',
 		tag: 'academic',
+		skills: 'Mentoring, Photolithography, PCB design',
 		description: 'Lead interdisciplinary research team at <a href="https://kevin200555.github.io/uci-hacker-fab-website/" class="underline text-blue-600" target="_blank">Irvine Hacker Fab</a> on lithography projects, which originated from <a href="https://ethanyxu.com/HackerFab" class="underline text-blue-600" target="_blank">HackerFab</a>',
+		 details: [
+		       "Lead interdisciplinary research team at UCI's branch of Hacker Fab (https://ethanyxu.com/IrvineHackerFab)",
+		       "Spearhead development of optical lithography projects, e.g., tube furnace, spin coater, and patterning.",
+		       "Drive fund-raising initiatives and oversee project management. Cultivate collaborative environment as graduate student leader (https://ethanyxu.com/UROP)",
+		     ],
 	},
 	{
 		company: 'UCI\'s Engineering Design in Industry Program',
@@ -48,23 +68,40 @@ export const experiences = [
 		title: 'Mechanical Engineer',
 		tag: 'Work',
 		location: 'Irvine, CA, USA',
+		skills: 'Arduino, Solidworks, 3D print',
 		description: 'Development of personal hygiene device for hot, damp, and sanitized towelette delivery, detailed in <a href="https://projects.eng.uci.edu/projects/2021-2022/edi-whoopy-wipes" class="underline text-blue-600" target="_blank">EDI Whoopy Wipes</a>. It is later commercialized on <a href="https://whoopywipes.com/" class="underline text-blue-600" target="_blank">WhoopyWipes.com</a>',
+		details: [
+			"Lead development of innovative personal hygiene device for hot, damp, and sanitized towelette delivery",
+			"Collaborate with cross-functional team to optimize product functionality and user experience",
+			"More infomation on https://ethanyxu.com/WhoopyWipes"
+		]
 	},
 	{
 		company: 'UCI\'s Engineering Design in Industry Program',
 		time: 'Sep 2019 - Dec 2019',
 		title: 'Mechanical Engineer',
 		location: 'Irvine, CA, USA',
-		tag: 'academic',
+		tag: 'work',
+		skills: 'Computer vision, Signal processing, Solidworks',
 		description: 'Develop hands-free, noninvasive clinical solution for enhanced blood vessel visualization',
+		details: [
+			"Develop hands-free, noninvasive clinical solution for enhanced blood vessel visualization",
+			"Create comprehensive Bill of Materials (BOM) for efficient product manufacturing",
+			"Apply principles of objective and quantifiable assessment in medical device design",
+		]
 	},
 	{
 		company: 'PricewaterhouseCoopers',
 		time: 'Sep 2017 - Dec 2017',
 		title: 'Strategy consulting Intership',
-		tag: 'academic',
+		tag: 'work',
 		location: 'Shanghai, China',
+		skills: 'Strategy consult, Communication',
 		description: 'Provide strategic consulting services to a prominent Electric and Electronic Manufacturing company',
+		details: [
+			"Provide strategic consulting services to a prominent Electric and Electronic Manufacturing company",
+			"Utilize enterprise analysis techniques to identify market opportunities",
+		]
 	},
 	// {
 	// 	company: 'Radium Institute (Institut du Radium)',
@@ -120,7 +157,7 @@ export const presentations = [
 		time: 'April 2025'		,
 		location: 'San Diego, CA, USA',
 		link: 'http://terrano.ucsd.edu/jorge/sccw/program.html',
-		linkText: 'program',
+		linkText: 'Program',
 	},
 	{
 		title: 'Discrete-Time Output Feedback under Bounded Actuators: Single and Multi-agent Problems',
@@ -176,7 +213,7 @@ export const skills = [
 
 	{
 		title: 'Control Theory',
-		description: 'PID Control, Nonlinear Control, Robust Control ($H_{\\infty}$ , $l_2$ gain and gain scheduling),  Event-Triggered Control, Control Barrier Function, Multi-Agent System, Anti-Windup Control, MPC, LQR',
+		description: 'PID Control, Nonlinear Control, Robust Control ($H_{\\infty}$ , $l_{2}$ gain and gain scheduling),  Event-Triggered Control, Control Barrier Function, Multi-Agent System, Anti-Windup Control, MPC, LQR'
 	},
 
 	{
@@ -186,7 +223,7 @@ export const skills = [
 
 	{
 		title:'Electric Engineering',
-		description:'Micro-Controller Develop (Arduino, STM32, RaspberryPi), PCB desgin(Altium Designer, Easy EDA, KiCad), Oscilloscopes, Soldering, Circuits and Signals, Power \& Energy System (AC,DC), DSP',
+		description:'Micro-Controller Develop (Arduino, STM32, RaspberryPi), PCB desgin(Altium Designer, Easy EDA, KiCad), Oscilloscopes, Soldering, Circuits and Signals, Power and Energy System (AC,DC), DSP',
 	},
 
 	{
@@ -198,4 +235,35 @@ export const skills = [
 	// 	description: 'Spectroscopy, Isolation of Radioactive Elements, Radiation Measurement',
 	// },
 ];
+
+export const awards = [
+	{
+		title: 'Provincial Third Prize for National College Mathematical Contest in Modeling',
+		time: 'Sep 2018 - Dec 2018',
+		skills: 'Modelling, Optimisation',
+		details: [
+			"Lead team in designing regulation protocol for RGV robots in automated warehouse systems",
+			"Optimize working patterns to minimize robot stop time, enhancing overall efficiency",
+		]
+	},
+	{
+		title: 'Excellence Award for 20th electronic design contest of Southeast University',
+		time: 'Apr 2018 - Jun 2018',
+		skills: 'MCU development(STM32), Circuits',
+		details: [
+			"Collaborate in team to design feedback control system for DC power under varying load conditions",
+			"Test on bread board with oscilloscope, finalize with PCB board design",
+		]
+	},
+	{
+		title: 'First price for 14th RoboCup of Southeast University',
+		time: 'Dec 2017 - Jan 2018',
+		skills: 'ROS, Python, Pattern recognition',
+		details: [
+			"Program a robot using ROS for navigation and data collection",
+			"Use OpenCV in Python to recognize and track objects",
+		]
+	},
+];
+
 

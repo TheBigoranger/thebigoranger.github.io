@@ -8,13 +8,13 @@ import {
   presentations,
   skills,
   selfDescription,
+  awards,
 } from "../data/cv_plain";
 
 // ======================
 // Date parsing + sorting
 // ======================
 
-// 3-letter month index
 const MONTH_INDEX: Record<string, number> = {
   jan: 1,
   feb: 2,
@@ -30,12 +30,9 @@ const MONTH_INDEX: Record<string, number> = {
   dec: 12,
 };
 
-/**
- * Parse the start date from a "time" string into a sortable number.
- */
 function parseStartMonthIndex(time: string): number {
   const re = /([A-Za-z]{3,9})\s+(\d{4})/;
-  const m = time.match(re);
+  const m = time?.match(re);
   if (!m) return 0;
 
   const monthKey = m[1].slice(0, 3).toLowerCase();
@@ -45,21 +42,42 @@ function parseStartMonthIndex(time: string): number {
   return year * 12 + month;
 }
 
-/**
- * Generic sorter: newest → oldest
- */
 const sortByTimeDescending = <T extends { time: string }>(arr: T[]): T[] =>
   arr
     .slice()
     .sort((a, b) => parseStartMonthIndex(b.time) - parseStartMonthIndex(a.time));
 
 // ======================
-// LaTeX escaping helpers
+// Dynamic experience grouping by tag
 // ======================
 
-/**
- * Escape LaTeX special chars in visible text.
- */
+type ExperienceLike = { time: string; tag?: string };
+
+function slugifyTag(tag: unknown): string {
+  const raw = String(tag ?? "").trim().toLowerCase();
+  const slug = raw.replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+  return slug || "untagged";
+}
+
+function groupExperiencesByTag<T extends ExperienceLike>(items: T[]) {
+  const buckets: Record<string, T[]> = {};
+
+  for (const e of items ?? []) {
+    const key = `${slugifyTag((e as any).tag)}Experiences`;
+    (buckets[key] ??= []).push(e);
+  }
+
+  for (const key of Object.keys(buckets)) {
+    buckets[key] = sortByTimeDescending(buckets[key]);
+  }
+
+  return buckets;
+}
+
+// ======================
+// LaTeX escaping for links.tex
+// ======================
+
 function escapeLatexText(s: string): string {
   return s
     .replace(/\\/g, "\\textbackslash{}")
@@ -74,10 +92,6 @@ function escapeLatexText(s: string): string {
     .replace(/~/g, "\\textasciitilde{}");
 }
 
-/**
- * Escape minimally for \href{...}{...} URL argument.
- * In practice, most URLs are safe, but '%' and '#' commonly break TeX.
- */
 function escapeLatexUrl(url: string): string {
   return url
     .replace(/\\/g, "\\textbackslash{}")
@@ -101,13 +115,22 @@ if (!fs.existsSync(targetDir)) {
 // Build sorted cv_plain.json
 // ======================
 
+const experiencesSorted = sortByTimeDescending(experiences as any[]);
+const experienceSections = groupExperiencesByTag(experiencesSorted as any[]);
+
 const cvData = {
-  experiences: sortByTimeDescending(experiences),
+  // keep legacy field
+  experiences: experiencesSorted,
+
+  // dynamic sections like academicExperiences/workExperiences/...
+  ...experienceSections,
+
   education: sortByTimeDescending(education),
   presentations: sortByTimeDescending(presentations),
   skills,
-  selfDescription, // keep raw selfDescription in JSON (text + links), LaTeX will handle linking
+  selfDescription,
   links,
+  awards,
 };
 
 const jsonPath = path.join(targetDir, "cv_plain.json");
@@ -115,14 +138,13 @@ fs.writeFileSync(jsonPath, JSON.stringify(cvData, null, 2), "utf-8");
 console.log(`Wrote cv_plain.json to: ${jsonPath}`);
 
 // ======================
-// Write links.tex
+// ✅ Restore links.tex output
 // ======================
 
 const linksTexPath = path.join(targetDir, "links.tex");
 
-// one \href per line
 const linksTex = (links ?? [])
-  .map((l) => {
+  .map((l: any) => {
     const url = escapeLatexUrl(String(l.url ?? "").trim());
     const text = escapeLatexText(String(l.text ?? "").trim());
     if (!url || !text) return "";
@@ -150,5 +172,5 @@ if (!fs.existsSync(bibSource)) {
 fs.copyFileSync(bibSource, bibTarget);
 console.log(`Copied Mypaper.bib → ${bibTarget}`);
 
-console.log("Export complete: sorted cv_plain.json + links.tex + Mypaper.bib");
+console.log("Export complete: cv_plain.json + links.tex + Mypaper.bib");
 
