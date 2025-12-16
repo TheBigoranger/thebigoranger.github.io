@@ -9,6 +9,7 @@ import {
   skills,
   selfDescription,
   awards,
+  language,
 } from "../data/cv_plain";
 
 // ======================
@@ -131,6 +132,7 @@ const cvData = {
   selfDescription,
   links,
   awards,
+  language,
 };
 
 const jsonPath = path.join(targetDir, "cv_plain.json");
