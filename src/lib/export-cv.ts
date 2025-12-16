@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 
 import {
+  links,
   experiences,
   education,
   presentations,
@@ -53,6 +54,40 @@ const sortByTimeDescending = <T extends { time: string }>(arr: T[]): T[] =>
     .sort((a, b) => parseStartMonthIndex(b.time) - parseStartMonthIndex(a.time));
 
 // ======================
+// LaTeX escaping helpers
+// ======================
+
+/**
+ * Escape LaTeX special chars in visible text.
+ */
+function escapeLatexText(s: string): string {
+  return s
+    .replace(/\\/g, "\\textbackslash{}")
+    .replace(/&/g, "\\&")
+    .replace(/%/g, "\\%")
+    .replace(/\$/g, "\\$")
+    .replace(/#/g, "\\#")
+    .replace(/_/g, "\\_")
+    .replace(/{/g, "\\{")
+    .replace(/}/g, "\\}")
+    .replace(/\^/g, "\\textasciicircum{}")
+    .replace(/~/g, "\\textasciitilde{}");
+}
+
+/**
+ * Escape minimally for \href{...}{...} URL argument.
+ * In practice, most URLs are safe, but '%' and '#' commonly break TeX.
+ */
+function escapeLatexUrl(url: string): string {
+  return url
+    .replace(/\\/g, "\\textbackslash{}")
+    .replace(/%/g, "\\%")
+    .replace(/#/g, "\\#")
+    .replace(/{/g, "\\{")
+    .replace(/}/g, "\\}");
+}
+
+// ======================
 // Target directory
 // ======================
 
@@ -71,14 +106,34 @@ const cvData = {
   education: sortByTimeDescending(education),
   presentations: sortByTimeDescending(presentations),
   skills,
-  selfDescription, // include raw selfDescription so JSON consumers can use it
+  selfDescription, // keep raw selfDescription in JSON (text + links), LaTeX will handle linking
+  links,
 };
 
 const jsonPath = path.join(targetDir, "cv_plain.json");
-
 fs.writeFileSync(jsonPath, JSON.stringify(cvData, null, 2), "utf-8");
 console.log(`Wrote cv_plain.json to: ${jsonPath}`);
 
+// ======================
+// Write links.tex
+// ======================
+
+const linksTexPath = path.join(targetDir, "links.tex");
+
+// one \href per line
+const linksTex = (links ?? [])
+  .map((l) => {
+    const url = escapeLatexUrl(String(l.url ?? "").trim());
+    const text = escapeLatexText(String(l.text ?? "").trim());
+    if (!url || !text) return "";
+    return `\\LinkAdd{${url}}{${text}}`;
+  })
+  .filter(Boolean)
+  .join("\n")
+  .concat("\n");
+
+fs.writeFileSync(linksTexPath, linksTex, "utf-8");
+console.log(`Wrote links.tex to: ${linksTexPath}`);
 
 // ======================
 // Copy Mypaper.bib
@@ -95,38 +150,5 @@ if (!fs.existsSync(bibSource)) {
 fs.copyFileSync(bibSource, bibTarget);
 console.log(`Copied Mypaper.bib → ${bibTarget}`);
 
-
-// ======================
-// Generate selfDescription.tex
-// ======================
-
-type LinkDef = { match: string; url: string };
-
-function toLatexParagraph(text: string, links: LinkDef[]): string {
-  let out = text.trim();
-
-  // Convert each link match → \href{}
-  for (const link of links) {
-    const escaped = link.match.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const regex = new RegExp(escaped, "g");
-    out = out.replace(regex, `\\href{${link.url}}{${link.match}}`);
-  }
-
-  // Collapse whitespace
-  out = out.replace(/\s+/g, " ");
-
-  return out;
-}
-
-const selfDescTex = toLatexParagraph(
-  selfDescription.text,
-  selfDescription.links ?? []
-);
-
-const texPath = path.join(targetDir, "selfDescription.tex");
-
-fs.writeFileSync(texPath, selfDescTex + "\n", "utf-8");
-console.log(`Wrote selfDescription.tex → ${texPath}`);
-
-console.log("Export complete: sorted cv_plain.json + Mypaper.bib + selfDescription.tex");
+console.log("Export complete: sorted cv_plain.json + links.tex + Mypaper.bib");
 

@@ -1,13 +1,28 @@
+export const links = [
+  {
+      text: 'Faryar Jabbari',
+      url: 'https://engineering.uci.edu/users/faryar-jabbari',
+    },
+  {
+      text: 'Irvine Hacker Fab',
+      url: 'https://kevin200555.github.io/uci-hacker-fab-website/',
+    },
+  {
+      text: 'HackerFab',
+      url: 'https://ethanyxu.com/HackerFab',
+    },
+  {
+      text: 'EDI Whoopy Wipes',
+      url: 'https://projects.eng.uci.edu/projects/2021-2022/edi-whoopy-wipes',
+    },
+  {
+      text: 'WhoopyWipes.com',
+      url: 'https://whoopywipes.com/',
+    },
+];
+
 export const selfDescription = {
   text: `I am a Ph.D. student at UC Irvine studying Systems and Control under the supervision of Professor Faryar Jabbari. I have an education background in mechanical engineering, especially on optimization and control theory. My current interest is multi-agent systems, anti-windup control, event-triggered control, linear parameter varying systems, distributed optimization on graphs, and control barrier functions.  `,
-  links: [
-    {
-      match: "Faryar Jabbari",
-      url: "https://engineering.uci.edu/users/faryar-jabbari",
-    },
-    // later you can add more, e.g.:
-    // { match: "UC Irvine", url: "https://uci.edu" },
-  ],
 };
 
 export const experiences = [
@@ -16,6 +31,7 @@ export const experiences = [
 		time: 'Sep 2021 - Now',
 		title: 'Teaching Assistant / Instructor',
 		location: 'Irvine, CA, USA',
+		tag: 'academic',
 		description: 'Assist Professor Faryar Jabbari in ENGRMAE 80: Dynamics',
 	},
 	{
@@ -23,12 +39,14 @@ export const experiences = [
 		time: 'Sep 2024 - Now',
 		title: 'Graduate Student Lead',
 		location: '',
+		tag: 'academic',
 		description: 'Lead interdisciplinary research team at <a href="https://kevin200555.github.io/uci-hacker-fab-website/" class="underline text-blue-600" target="_blank">Irvine Hacker Fab</a> on lithography projects, which originated from <a href="https://ethanyxu.com/HackerFab" class="underline text-blue-600" target="_blank">HackerFab</a>',
 	},
 	{
 		company: 'UCI\'s Engineering Design in Industry Program',
 		time: 'Jan 2020 - Mar 2020',
 		title: 'Mechanical Engineer',
+		tag: 'Work',
 		location: 'Irvine, CA, USA',
 		description: 'Development of personal hygiene device for hot, damp, and sanitized towelette delivery, detailed in <a href="https://projects.eng.uci.edu/projects/2021-2022/edi-whoopy-wipes" class="underline text-blue-600" target="_blank">EDI Whoopy Wipes</a>. It is later commercialized on <a href="https://whoopywipes.com/" class="underline text-blue-600" target="_blank">WhoopyWipes.com</a>',
 	},
@@ -37,12 +55,14 @@ export const experiences = [
 		time: 'Sep 2019 - Dec 2019',
 		title: 'Mechanical Engineer',
 		location: 'Irvine, CA, USA',
+		tag: 'academic',
 		description: 'Develop hands-free, noninvasive clinical solution for enhanced blood vessel visualization',
 	},
 	{
 		company: 'PricewaterhouseCoopers',
 		time: 'Sep 2017 - Dec 2017',
 		title: 'Strategy consulting Intership',
+		tag: 'academic',
 		location: 'Shanghai, China',
 		description: 'Provide strategic consulting services to a prominent Electric and Electronic Manufacturing company',
 	},
