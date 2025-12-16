@@ -271,10 +271,10 @@ export const language = [
 	{
 		'lan' : 'English',
 		'efficiency': 'Professional proficiency',
-	}
+	},
 	{
 		'lan': 'Mandarin',
 		'efficiency': 'Native speaker'
-	}
+	},
 
 ];
