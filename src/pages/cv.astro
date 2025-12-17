@@ -25,39 +25,34 @@ import {
   sortPublicationsNewToOld,
 } from '@/lib/publications'
 
+// ✅ CV PDF
+import cvPdfUrl from '@/data/CV_YichengXu.pdf?url'
+
 let orderedExperiences: Experience[] = []
 let orderedEducations: Education[] = []
 let orderedPublications: Publication[] = []
 let orderedPresentations: Presentation[] = []
 
-// For entries with "Sep 2024 - Present" style ranges (experiences / education)
 const orderElement = <T extends { time: string }>(a: T, b: T) => {
   const presentValues = ['present', 'now', 'current', 'today']
 
   const endA = (a.time as string)?.split(' - ')[1]?.toLowerCase()
   const endB = (b.time as string)?.split(' - ')[1]?.toLowerCase()
 
-  if (endA && presentValues.includes(endA)) {
-    return -1
-  }
-  if (endB && presentValues.includes(endB)) {
-    return 1
-  }
+  if (endA && presentValues.includes(endA)) return -1
+  if (endB && presentValues.includes(endB)) return 1
 
   const dateA = new Date((a.time as string)?.split(' - ')[1])
   const dateB = new Date((b.time as string)?.split(' - ')[1])
   return dateB.getTime() - dateA.getTime()
 }
 
-// ✅ For presentations like "April 2025" (single date, not range)
+// Presentations with single-date times
 const parsePresentationTime = (time: string | undefined): number => {
   if (!time) return 0
   const t = time.toLowerCase().trim()
   const presentValues = ['present', 'now', 'current', 'today']
-  if (presentValues.includes(t)) {
-    // put "Present" at the very top
-    return Number.MAX_SAFE_INTEGER
-  }
+  if (presentValues.includes(t)) return Number.MAX_SAFE_INTEGER
   const d = new Date(time)
   return isNaN(d.getTime()) ? 0 : d.getTime()
 }
@@ -70,20 +65,35 @@ if (education.length > 0) {
   orderedEducations = education.sort((a, b) => orderElement(a, b))
 }
 
-// ✅ Presentations: newest → oldest by their `time` string
 if (presentations && presentations.length > 0) {
   orderedPresentations = presentations
     .slice()
     .sort((a, b) => parsePresentationTime(b.time) - parsePresentationTime(a.time))
 }
 
-// Publications: newest → oldest by year, via shared helper
 if (publications.length > 0) {
   orderedPublications = sortPublicationsNewToOld(publications)
 }
 ---
 
 <Layout>
+  <!-- ✅ CV title + inline download link -->
+  <section class="mb-12">
+    <div class="flex items-center gap-4">
+      <h1 class="text-3xl font-bold">
+        Curriculum Vitae
+      </h1>
+
+      <a
+        href={cvPdfUrl}
+        download
+        class="text-sm font-medium underline underline-offset-4 hover:text-primary transition-colors"
+      >
+        Download CV (PDF)
+      </a>
+    </div>
+  </section>
+
   {
     orderedEducations.length > 0 && (
       <section class="mb-12">
@@ -104,7 +114,7 @@ if (publications.length > 0) {
         <CvTimeline elements={orderedExperiences} colored={true} />
       </section>
     )
-  } 
+  }
 
   {
     orderedPublications.length > 0 && (
@@ -118,7 +128,6 @@ if (publications.length > 0) {
             const year = getYear(paper)
             const venue = getVenue(paper)
             const link = getLink(paper)
-
             const authors = toAuthorPieces(paper.authors)
 
             const metaPieces: any[] = []
@@ -151,7 +160,6 @@ if (publications.length > 0) {
               <li class="text-base leading-relaxed">
                 {year && <span class="font-semibold">[{year}] </span>}
 
-                {/* Authors */}
                 <span>
                   {authors.map((a, idx) => (
                     <>
@@ -165,7 +173,6 @@ if (publications.length > 0) {
                   ,{' '}
                 </span>
 
-                {/* Title */}
                 <span>&quot;</span>
                 {link ? (
                   <a
@@ -180,7 +187,6 @@ if (publications.length > 0) {
                 )}
                 <span>&quot;, </span>
 
-                {/* Venue + year + DOI / arXiv */}
                 {metaPieces.map((piece, idx) => (
                   <>
                     {idx > 0 && <span>, </span>}
@@ -193,10 +199,10 @@ if (publications.length > 0) {
         </ul>
       </section>
     )
-	}
+  }
 
-	{
-	orderedPresentations.length > 0 && (
+  {
+    orderedPresentations.length > 0 && (
       <section class="mb-12">
         <h2 class="text-2xl font-bold mb-6 border-b pb-2">
           Presentations &amp; Conferences
@@ -207,7 +213,6 @@ if (publications.length > 0) {
             <li class="text-base leading-relaxed">
               <div class="flex justify-between gap-4">
                 <div>
-                  {/* title can contain LaTeX if you later switch to set:html */}
                   <div class="font-semibold">{p.title}</div>
                   <div class="text-sm text-muted-foreground">
                     {p.event}
@@ -242,7 +247,7 @@ if (publications.length > 0) {
         </ul>
       </section>
     )
-	}
+  }
 
   {
     skills.length > 0 && (

@@ -1,47 +1,74 @@
 ---
 import { Image } from 'astro:assets'
-
 import SocialIcons from './SocialIcons.astro'
+import { selfDescription, links } from '../../data/cv_plain'
 
-import SocialIcons from "./SocialIcons.astro";
-import { selfDescription } from "../../data/cv_plain";
+// Serve CV PDF via Vite
+import cvPdfUrl from '@/data/CV_YichengXu.pdf?url'
 
 type LinkDef = {
-  match: string;
-  url: string;
-};
-
-function applyLinks(text: string, links: LinkDef[]): string {
-  let result = text;
-  for (const link of links) {
-    const escaped = link.match.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const regex = new RegExp(escaped, "g");
-    result = result.replace(
-      regex,
-      `<a href="${link.url}" style="color:blue">${link.match}</a>`
-    );
-  }
-  return result;
+  text: string
+  url: string
 }
 
-const heroHTML = applyLinks(selfDescription.text.trim(), selfDescription.links);
-const {fullName, title, institute, profilePicture} = Astro.props
+function escapeRegExp(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function applyLinks(text: string, linkDefs?: LinkDef[] | null): string {
+  let result = text ?? ''
+
+  const safeLinks: LinkDef[] = Array.isArray(linkDefs) ? linkDefs : []
+
+  for (const link of safeLinks) {
+    if (!link?.text || !link?.url) continue
+
+    const pattern = escapeRegExp(link.text).replace(/\s+/g, '\\s+')
+    const regex = new RegExp(pattern, 'g')
+
+    result = result.replace(
+      regex,
+      `<a href="${link.url}" class="underline text-blue-600 hover:text-blue-800" target="_blank" rel="noreferrer">${link.text}</a>`
+    )
+  }
+
+  return result
+}
+
+const heroHTML = applyLinks(selfDescription?.text?.trim?.() ?? '', links as LinkDef[])
+const { fullName, title, institute, profilePicture } = Astro.props
 ---
+
 <div class='flex-1'>
   <h1 class='text-4xl font-bold mb-4'>
     Hi! I'm <span class='text-secondary'>{fullName}</span>
   </h1>
-  <p class='text-xl text-gray-600 mb-4'>{title}{institute ? ` at ${institute}` : ''}</p>
+
+  <p class='text-xl text-gray-600 mb-4'>
+    {title}{institute ? ` at ${institute}` : ''}
+  </p>
+
   <p class="text-lg mb-6" set:html={heroHTML}></p>
-  <div class='flex gap-4'>
+
+  <!-- bottom row: icons left, CV link right -->
+  <div class="flex items-center justify-between">
     <SocialIcons />
+
+    <a
+      href={cvPdfUrl}
+      download
+      class="text-sm font-medium underline underline-offset-4 hover:text-primary transition-colors"
+    >
+      Download CV (PDF)
+    </a>
   </div>
 </div>
+
 <div class='size-72 lg:block hidden'>
-  <!-- Add your profile image -->
   <Image
     src={profilePicture}
     alt={fullName}
     class='w-full h-full mask mask-circle size-44'
   />
 </div>
+
