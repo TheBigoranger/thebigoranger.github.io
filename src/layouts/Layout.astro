@@ -29,6 +29,13 @@ const {
 
 		<Head title={title} description={description} image={image} />
 
+		<!-- ✅ model-viewer: define web component early (Astro-safe) -->
+		<script
+			type="module"
+			src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
+			is:inline>
+		</script>
+
 		<!-- 🔹 KaTeX: CSS for rendering equations -->
 		<link
 			rel="stylesheet"
