@@ -178,7 +178,7 @@ export const presentations = [
 	{
 		title: 'Spline-based parameter varying output feedback synthesis with improved L2 gain',
 		event: '2024 IEEE 63rd Conference on Decision and Control (CDC)',
-		location: 'Milanoi, Italy',
+		location: 'Milano, Italy',
 		time: 'Dec 2024',
 		link: 'https://ieeexplore.ieee.org/document/10886461',
 		linkText: 'Presented Paper',
