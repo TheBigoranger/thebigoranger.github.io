@@ -82,7 +82,7 @@ export const experiences = [
 		title: 'Mechanical Engineer',
 		location: 'Irvine, CA, USA',
 		tag: 'work',
-		skills: 'Computer vision, Signal processing, Solidworks',
+		skills: 'Signal processing, Solidworks',
 		description: 'Develop hands-free, noninvasive clinical solution for enhanced blood vessel visualization',
 		details: [
 			"Develop hands-free, noninvasive clinical solution for enhanced blood vessel visualization",
