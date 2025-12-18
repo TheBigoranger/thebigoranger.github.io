@@ -176,11 +176,11 @@ export const presentations = [
 		linkText: 'Presented Paper',
 	},
 	{
-		title: 'Discrete-Time Output Feedback under Bounded Actuators: Single and Multi-agent Problems',
+		title: 'Spline-based parameter varying output feedback synthesis with improved L2 gain',
 		event: '2024 IEEE 63rd Conference on Decision and Control (CDC)',
-		location: 'Toronto, ON, Canada',
-		time: 'Jul 2024'		,
-		link: 'https://ieeexplore.ieee.org/document/10644563',
+		location: 'Milanoi, Italy',
+		time: 'Dec 2024',
+		link: 'https://ieeexplore.ieee.org/document/10886461',
 		linkText: 'Presented Paper',
 	},
 	{
