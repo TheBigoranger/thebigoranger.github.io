@@ -14,12 +14,14 @@ type Props = {
 	title?: string
 	description?: string
 	image?: string
+	fullWidth?: boolean
 }
 
 const {
 	title = seo.default_title,
 	description = seo.default_description,
 	image = seo.default_image,
+	fullWidth = false,
 } = Astro.props
 ---
 <!doctype html>
@@ -28,13 +30,6 @@ const {
 		{template.transitions && <ClientRouter /> }
 
 		<Head title={title} description={description} image={image} />
-
-		<!-- ✅ model-viewer: define web component early (Astro-safe) -->
-		<script
-			type="module"
-			src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
-			is:inline>
-		</script>
 
 		<!-- 🔹 KaTeX: CSS for rendering equations -->
 		<link
@@ -101,7 +96,9 @@ const {
 					</nav>
 				</div>
 
-                <main class='p-8 pt-10 lg:pt-16 lg:max-w-5xl max-w-full mx-auto min-h-screen flex flex-col justify-between'>
+                <main class={`p-8 pt-10 lg:pt-16 max-w-full mx-auto min-h-screen flex flex-col justify-between ${
+					fullWidth ? 'lg:max-w-none w-full' : 'lg:max-w-5xl'
+				}`}>
 					<!-- Page content -->
 					<slot />
 					<Footer />

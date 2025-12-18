@@ -1,0 +1,184 @@
+---
+import ModelBrowser from "@/components/three/ModelBrowser.jsx";
+import { readdir } from "node:fs/promises";
+import { modelsMetaByBaseName } from "@/data/3Dmodels";
+
+const modelsDir = new URL("../../../public/3Dmodels/", import.meta.url);
+const entries = await readdir(modelsDir, { withFileTypes: true });
+
+// 3D viewer supported files (do NOT include .sldprt here)
+const allowedViewerExt = /\.(stl|obj|ply|fbx|glb)$/i;
+
+const baseName = (filename) => filename.replace(/\.[^/.]+$/, "");
+const extLower = (filename) => (filename.split(".").pop() || "").toLowerCase();
+
+// Build a lookup: baseName -> sldprt download url (if exists)
+const sldprtByBase = new Map();
+for (const e of entries) {
+  if (!e.isFile()) continue;
+  if (extLower(e.name) !== "sldprt") continue;
+
+  const base = baseName(e.name);
+  const url = `${import.meta.env.BASE_URL}3Dmodels/${e.name}`;
+  sldprtByBase.set(base, url);
+}
+
+const models = entries
+  .filter((e) => e.isFile() && allowedViewerExt.test(e.name))
+  .map((e) => {
+    const base = baseName(e.name);
+    const meta = modelsMetaByBaseName[base];
+    const url = `${import.meta.env.BASE_URL}3Dmodels/${e.name}`;
+
+    return {
+      name: e.name,
+      base,
+      url,
+      downloadUrl: url,
+      sldprtDownloadUrl: sldprtByBase.get(base) || null,
+
+      title: meta?.title ?? base,
+      description: meta?.description ?? "",
+      modelLinks: meta?.modelLinks ?? [],
+      tag: (meta?.tag ?? "Others").toString(),
+    };
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+// Group for expandable sidebar
+const groupMap = new Map();
+for (const m of models) {
+  const tag = m.tag || "Others";
+  if (!groupMap.has(tag)) groupMap.set(tag, []);
+  groupMap.get(tag).push(m);
+}
+
+const tags = Array.from(groupMap.keys()).sort((a, b) => {
+  if (a === "Others") return 1;
+  if (b === "Others") return -1;
+  return a.localeCompare(b);
+});
+
+const groups = tags.map((tag) => ({
+  tag,
+  items: groupMap.get(tag),
+}));
+
+// Details panel mapping (keyed by the left-list filename)
+const modelsClientMap = Object.fromEntries(
+  models.map((m) => [
+    m.name,
+    {
+      title: m.title,
+      base: m.base,
+      description: m.description,
+      downloadUrl: m.downloadUrl,
+      sldprtDownloadUrl: m.sldprtDownloadUrl,
+      modelLinks: m.modelLinks,
+      tag: m.tag,
+    },
+  ])
+);
+---
+
+<div class="mt-12" id="model-browser-wrap" data-models={JSON.stringify(modelsClientMap)}>
+  <ModelBrowser
+    client:only="react"
+    models={models}
+    groups={groups}
+    sidebarWidth={360}
+    height={720}
+  />
+</div>
+
+<div class="mt-8 rounded-2xl bg-base-200 p-6" id="model-details">
+  <div class="text-sm opacity-60">
+    Click a model on the left to see its description and download link.
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const wrap = document.getElementById("model-browser-wrap");
+    const panel = document.getElementById("model-details");
+    if (!wrap || !panel) return;
+
+    let db = {};
+    try {
+      db = JSON.parse(wrap.getAttribute("data-models") || "{}");
+    } catch {}
+
+    const escapeHtml = (s) =>
+      String(s ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    const render = (filename) => {
+      const m = db?.[filename];
+
+      if (!m) {
+        panel.innerHTML = `<div class="text-sm opacity-60">
+          No metadata found for <span class="font-mono">${escapeHtml(filename)}</span>.
+          Add it in <span class="font-mono">src/data/3Dmodels.ts</span>.
+        </div>`;
+        return;
+      }
+
+      const desc = (m.description || "").trim()
+        ? `<p class="mt-2 leading-relaxed">${escapeHtml(m.description)}</p>`
+        : `<p class="mt-2 opacity-60">No description provided.</p>`;
+
+      const links =
+        (m.modelLinks || [])
+          .map(
+            (l) =>
+              `<li><a class="link link-primary" href="${l.url}" target="_blank" rel="noreferrer">${escapeHtml(
+                l.label
+              )}</a></li>`
+          )
+          .join("") || `<li class="opacity-60">No links provided.</li>`;
+
+      const sldprtBtn = m.sldprtDownloadUrl
+        ? `<a class="btn btn-sm" href="${m.sldprtDownloadUrl}" download>SLDPRT</a>`
+        : "";
+
+      panel.innerHTML = `
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-wrap items-baseline justify-between gap-3">
+            <div>
+              <div class="text-xl font-black">${escapeHtml(m.title)}</div>
+              <div class="text-sm opacity-60 font-mono">${escapeHtml(filename)}</div>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <a class="btn btn-sm" href="${m.downloadUrl}" download>Download</a>
+              ${sldprtBtn}
+            </div>
+          </div>
+
+          <div>
+            <div class="font-semibold">Description</div>
+            ${desc}
+          </div>
+
+          <div>
+            <div class="font-semibold">Links</div>
+            <ul class="mt-2 list-disc pl-5">
+              ${links}
+            </ul>
+          </div>
+        </div>
+      `;
+    };
+
+    wrap.addEventListener("click", (e) => {
+      const btn = e.target?.closest?.("button");
+      if (!btn) return;
+      const filename = (btn.textContent || "").trim();
+      if (filename && db?.[filename]) render(filename);
+    });
+  })();
+</script>
+
