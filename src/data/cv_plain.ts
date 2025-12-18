@@ -177,7 +177,7 @@ export const presentations = [
 	},
 	{
 		title: 'Discrete-Time Output Feedback under Bounded Actuators: Single and Multi-agent Problems',
-		event: '2022 IEEE 61st Conference on Decision and Control (CDC)',
+		event: '2024 IEEE 63rd Conference on Decision and Control (CDC)',
 		location: 'Toronto, ON, Canada',
 		time: 'Jul 2024'		,
 		link: 'https://ieeexplore.ieee.org/document/10644563',
