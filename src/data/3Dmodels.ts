@@ -32,6 +32,16 @@ export const modelsMeta: ModelMeta[] = [
       { label: "Printables", url: "https://www.printables.com/" },
     ],
   },
+  {
+    name: "TM_FrontPlate",
+    title: "Front plate for the board game Terraforming Mars",
+    tag: "Board Game",
+    description:
+      "A compact vise designed for snowboard tuning and waxing. Clamps securely to standard workbenches.",
+    modelLinks: [
+      { label: "Printables", url: "https://www.printables.com/" },
+    ],
+  },
 ]
 
 /** Lookup by base filename */
