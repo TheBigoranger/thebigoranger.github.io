@@ -1,16 +1,26 @@
 ---
 import ModelBrowser from "@/components/three/ModelBrowser.jsx";
 import { readdir } from "node:fs/promises";
+import path from "node:path";
 import { modelsMetaByBaseName } from "@/data/3Dmodels";
 
-const modelsDir = new URL("../../../public/3Dmodels/", import.meta.url);
-const entries = await readdir(modelsDir, { withFileTypes: true });
+// Always resolve from repo root (works in dev + astro build + GitHub Actions)
+const modelsDir = path.join(process.cwd(), "public", "3Dmodels");
 
 // 3D viewer supported files (do NOT include .sldprt here)
 const allowedViewerExt = /\.(stl|obj|ply|fbx|glb)$/i;
 
 const baseName = (filename) => filename.replace(/\.[^/.]+$/, "");
 const extLower = (filename) => (filename.split(".").pop() || "").toLowerCase();
+
+// Read directory safely (if folder missing, don't crash build)
+let entries = [];
+try {
+  entries = await readdir(modelsDir, { withFileTypes: true });
+} catch (err) {
+  // If public/3Dmodels doesn't exist in CI, just show no models instead of failing the build
+  entries = [];
+}
 
 // Build a lookup: baseName -> sldprt download url (if exists)
 const sldprtByBase = new Map();
@@ -93,7 +103,9 @@ const modelsClientMap = Object.fromEntries(
 
 <div class="mt-8 rounded-2xl bg-base-200 p-6" id="model-details">
   <div class="text-sm opacity-60">
-    Click a model on the left to see its description and download link.
+    {models.length > 0
+      ? "Click a model on the left to see its description and download link."
+      : "No models found in public/3Dmodels. (This won’t break the build.)"}
   </div>
 </div>
 
