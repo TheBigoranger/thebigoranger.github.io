@@ -1,4 +1,5 @@
 #!/bin/bash
+npm run export:cv
 npx astro build
 git add .
 git commit -m "build: auto deploy $(date '+%Y-%m-%d %H:%M:%S')" || true
