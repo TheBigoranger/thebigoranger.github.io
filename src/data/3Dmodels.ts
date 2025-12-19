@@ -29,7 +29,7 @@ export const modelsMeta: ModelMeta[] = [
     description:
       "A compact vise designed for snowboard tuning and waxing. Clamps securely to standard workbenches.",
     modelLinks: [
-      { label: "Printables", url: "https://www.printables.com/" },
+      { label: "Printables", url: "https://www.printables.com/model/1149018-snowboard-vise" },
     ],
   },
   {
@@ -39,7 +39,7 @@ export const modelsMeta: ModelMeta[] = [
     description:
       "A compact vise designed for snowboard tuning and waxing. Clamps securely to standard workbenches.",
     modelLinks: [
-      { label: "Printables", url: "https://www.printables.com/" },
+      { label: "Printables", url: "https://www.printables.com/model/1521160-terraforming-mars-player-mat-organizer-for-smaller/files" },
     ],
   },
 ]
