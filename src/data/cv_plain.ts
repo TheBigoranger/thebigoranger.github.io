@@ -54,7 +54,7 @@ export const experiences = [
 		title: 'Graduate Student Lead',
 		location: '',
 		tag: 'academic',
-		skills: 'Mentoring, Photolithography, PCB design',
+		skills: 'Mentoring, Photolithography, PCB',
 		description: 'Lead interdisciplinary research team at <a href="https://kevin200555.github.io/uci-hacker-fab-website/" class="underline text-blue-600" target="_blank">Irvine Hacker Fab</a> on lithography projects, which originated from <a href="https://ethanyxu.com/HackerFab" class="underline text-blue-600" target="_blank">HackerFab</a>',
 		 details: [
 		       "Lead interdisciplinary research team at UCI's branch of Hacker Fab (https://ethanyxu.com/IrvineHackerFab)",
