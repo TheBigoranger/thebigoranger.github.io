@@ -5,7 +5,7 @@ export const links = [
     },
   	{
       text: 'https://ethanyxu.com/IrvineHackerFab',
-      url: 'https://kevin200555.github.io/uci-hacker-fab-website/',
+      url: 'https://irvinehackerfab.github.io/hfab-website/',
     },
 	{
 	  text: 'Hacker Fab',
