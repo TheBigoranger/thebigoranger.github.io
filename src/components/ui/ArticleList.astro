@@ -55,6 +55,15 @@ const sortedYears = Object.keys(groups)
   .sort((a, b) => b - a);
 
 const hasYearGroups = sortedYears.length > 0;
+
+/** Bib `eprint` is usually just an id (e.g. 2508.11795); must not use as relative URL */
+function arxivAbsUrl(id: string | undefined): string {
+  if (!id) return "";
+  const s = id.trim();
+  if (/^https?:\/\//i.test(s)) return s;
+  const idOnly = s.replace(/^arxiv:/i, "").trim();
+  return `https://arxiv.org/abs/${idOnly}`;
+}
 ---
 
 <h2 class="text-3xl font-bold mb-4">{listTitle}</h2>
@@ -109,7 +118,11 @@ const hasYearGroups = sortedYears.length > 0;
                     </a>
                   )}
                   {item.arxiv && (
-                    <a href={item.arxiv} target="_blank" rel="noreferrer">
+                    <a
+                      href={arxivAbsUrl(item.arxiv)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       arXiv
                     </a>
                   )}
@@ -167,7 +180,11 @@ const hasYearGroups = sortedYears.length > 0;
               </a>
             )}
             {item.arxiv && (
-              <a href={item.arxiv} target="_blank" rel="noreferrer">
+              <a
+                href={arxivAbsUrl(item.arxiv)}
+                target="_blank"
+                rel="noreferrer"
+              >
                 arXiv
               </a>
             )}
