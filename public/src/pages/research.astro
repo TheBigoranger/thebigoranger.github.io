@@ -1,0 +1,86 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { profile } from "@/settings";
+import BetterIcon from "@/components/ui/BetterIcon.astro";
+import List from "@/components/ui/List.astro";
+import {RESEARCH_ICONS} from "@/data/researchIcons";
+
+const { research_areas } = profile;
+---
+
+<Layout title="Research | Dr. Marie Curie">
+  <div class="prose max-w-none">
+    <h1 class="text-3xl font-bold mb-8">Research Statement</h1>
+
+    <div class="mb-12">
+      <p class="text-lg mb-6" style="text-indent:2em">
+		The increasing availability of inexpensive sensors, processors, and actuators makes it possible to deploy large networks of simple agents, motivating my research on scalable and safety-aware control for multi-agent systems (MAS). Cheap agents enable practical large-scale deployment but also introduce real-world constraints such as actuator saturation, limited communication, nonlinear dynamics, and heterogeneous mission objectives. My work addresses these challenges by integrating anti-windup control for saturation handling, event-triggered mechanisms for communication efficiency, and linear parameter-varying (LPV) modeling to capture nonlinear behavior while preserving tractable optimization-based design.
+	</p>
+
+    <p class="text-lg mb-6" style="text-indent:2em">
+		A central focus of my research is distributed optimization, which allows agents to cooperatively solve global tasks using only local interactions. In this context, I found that the finite condition number of the Laplacian matrix plays a critical role in determining convergence and coordination performance, motivating algorithms that explicitly account for or regulate network connectivity properties. When individual agents pursue their own objectives but must satisfy collective safety requirements—such as maintaining connectivity or avoiding collisions—I employ Control Barrier Functions (CBFs) to guarantee forward-invariant safety constraints. By combining distributed optimization, LPV modeling, anti-windup design, event-triggered communication, and CBF-based safety, my research aims to build a unified control framework that is robust, scalable, efficient, and suitable for real-world deployment in large-scale MAS.
+	</p>
+    </div>
+
+    <h2 class="text-2xl font-bold mb-6">Research Areas</h2>
+<div class="space-y-6 mb-12">
+  {research_areas.map((area) => (
+    <div class="flex items-start gap-4">
+
+      {/* ICON LEFT */}
+      <div class="flex items-start justify-center">
+        <BetterIcon class="!mt-0">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke-width="2"
+            class="h-6 w-6 stroke-accent"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d={
+                RESEARCH_ICONS[area.field as keyof typeof RESEARCH_ICONS]?.path ||
+                RESEARCH_ICONS["computer-science"].path
+              }
+            />
+          </svg>
+        </BetterIcon>
+      </div>
+
+      {/* TEXT BLOCK RIGHT */}
+      <div class="leading-tight">
+        <h3 class="mt-0 mb-1 text-xl font-semibold">
+          {area.title}
+        </h3>
+        <p class="mt-0 text-base leading-relaxed">
+          {area.description}
+        </p>
+      </div>
+
+    </div>
+  ))}
+</div>
+
+    <List listTitle="Current Projects" listItems={[
+      {
+        title: "System performance of Leader-following Heterogeneous Linear Parameter Varying Multi-Agent-System",
+		description: "Leader-following control of LPV heterogeneous multi-agent systems focuses on coordinating agents whose dynamics vary across both time and operating conditions, while also differing from one another. By modeling each agent as a linear parameter-varying (LPV) system, this framework captures nonlinear behaviors and heterogeneity in a tractable way. The goal is to design distributed controllers that allow all agents—despite having distinct and parameter-varying dynamics—to track a designated leader’s trajectory using only local communication. This approach enables robust coordination under uncertainty, accommodates dynamically changing environments, and supports scalable formation control for large, diverse multi-agent networks."
+      },
+      {
+        title: "Regularity of the matrix control barrier function",
+		description: "Matrix Control Barrier Functions (MCBFs) generalize traditional scalar CBFs by enforcing matrix-valued safety constraints, e.g., connectivity preservation or positive definiteness. It also include the application to realize the Boolean-OR framework, allowing multiple safety conditions to be satisfied in a disjunctive manner within a single matrix inequality. This structure dramatically enlarges the feasible region for safe control, giving systems greater flexibility when navigating complex environments or handling coupled constraints. However, this expanded feasible set also introduces significant regularity challenges: ensuring smoothness, continuity and Lipschitz continuity becomes more difficult when safety is encoded through matrix inequalities that represent multiple logical alternatives. Therefore, understanding and guaranteeing the regularity of MCBFs is crucial for maintaining well-posedness and enabling robust, optimization-based safety enforcement in high-dimensional or heterogeneous multi-agent systems."
+      }
+    ]} />
+
+    <h2 class="text-2xl font-bold mb-6">Research Impact</h2>
+    <p class="text-lg mb-6"style="text-indent:2em">
+		My research advances the foundations of multi-agent systems by bridging rigorous control theory with the practical realities of modern, low-cost autonomous platforms. By integrating anti-windup design, event-triggered control, LPV modeling, distributed optimization, and safety-critical barrier functions, I develop scalable frameworks that allow large groups of inexpensive agents to operate reliably despite limited actuation, communication constraints, nonlinear behaviors, and heterogeneous objectives. These contributions enable multi-agent networks to function more efficiently and robustly in applications such as autonomous robotics, environmental monitoring, distributed sensing, and intelligent infrastructure.
+	</p>
+
+	<p class="text-lg mb-6"style="text-indent:2em">
+		Beyond theoretical development, my work provides actionable tools that improve the deployability and safety of real-world networked systems. Insights such as the importance of the Laplacian condition number in distributed optimization, or the use of barrier-function-based constraints for maintaining connectivity and collision avoidance, give practitioners principled methods for designing cooperative algorithms that are both high-performance and provably safe. Ultimately, my research contributes to a future where large-scale autonomous systems can be deployed with confidence—operating efficiently, adapting to uncertainty, and guaranteeing safety even when composed of simple individual agents.
+	</p>
+  </div>
+</Layout>

@@ -1,0 +1,14 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { profile } from "@/settings";
+import ModelBrowserSection from "@/components/three/ModelBrowserSection.astro";
+
+---
+
+<Layout title={`3D print models`} fullWidth>
+  <section class="w-full px-6 py-10">
+    <h1 class="text-4xl font-black text-center">3D print models</h1>
+    <ModelBrowserSection />
+  </section>
+</Layout>
+

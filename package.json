@@ -13,7 +13,7 @@
     "@astrojs/react": "^4.4.2",
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
-    "@astrojs/tailwind": "^6.0.2",
+    "@tailwindcss/vite": "^4.1.18",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@retorquere/bibtex-parser": "^9.0.26",
@@ -23,13 +23,13 @@
     "katex": "^0.16.28",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "daisyui": "^5.0.0",
     "tailwindcss": "^4.1.18",
     "theme-change": "^2.5.0",
     "three": "^0.182.0"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.19",
-    "daisyui": "^4.12.24",
     "tsx": "^4.21.0"
   }
 }

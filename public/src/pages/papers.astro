@@ -1,0 +1,101 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { publications as RAW_PUBLICATIONS } from '@/data/cv'
+
+import {
+  getYear,
+  getVenue,
+  getLink,
+  toAuthorPieces,
+  sortPublicationsNewToOld,
+} from '@/lib/publications'
+
+const ALL_PAPERS = sortPublicationsNewToOld(RAW_PUBLICATIONS)
+---
+
+<Layout title="Papers">
+  <div class="prose max-w-none">
+    <h1 class="text-3xl font-bold mb-8">Publications</h1>
+
+    <ul class="space-y-2">
+      {ALL_PAPERS.map((paper) => {
+        const year = getYear(paper)
+        const venue = getVenue(paper)
+        const link = getLink(paper)
+
+        const authors = toAuthorPieces(paper.authors)
+
+        const metaPieces: any[] = []
+        if (venue) metaPieces.push(<span><em>{venue}</em></span>)
+        if (year) metaPieces.push(<span>{year}</span>)
+
+        if (paper.doi) {
+          metaPieces.push(
+            <a
+              href={`https://doi.org/${paper.doi}`}
+              target="_blank"
+              class="underline hover:no-underline"
+            >
+              doi:{paper.doi}
+            </a>,
+          )
+        } else if (paper.arxiv) {
+          metaPieces.push(
+            <a
+              href={`https://arxiv.org/abs/${paper.arxiv}`}
+              target="_blank"
+              class="underline hover:no-underline"
+            >
+              arXiv:{paper.arxiv}
+            </a>,
+          )
+        }
+
+        return (
+          <li class="text-base leading-relaxed">
+            {/* [YEAR] */}
+            {year && <span class="font-semibold">[{year}] </span>}
+
+            {/* AUTHORS */}
+            <span>
+              {authors.map((a, idx) => (
+                <>
+                  {idx > 0 && <span>, </span>}
+                  {idx === authors.length - 1 && authors.length > 1 && (
+                    <span>and </span>
+                  )}
+                  {a.isMe ? <strong>{a.display}</strong> : a.display}
+                </>
+              ))}
+              ,{' '}
+            </span>
+
+            {/* TITLE */}
+            <span>&quot;</span>
+            {link ? (
+              <a
+                href={link}
+                target="_blank"
+                class="font-semibold underline hover:no-underline"
+              >
+                {paper.title}
+              </a>
+            ) : (
+              <span class="font-semibold">{paper.title}</span>
+            )}
+            <span>&quot;, </span>
+
+            {/* VENUE + YEAR + DOI/ARXIV */}
+            {metaPieces.map((piece, idx) => (
+              <>
+                {idx > 0 && <span>, </span>}
+                {piece}
+              </>
+            ))}
+          </li>
+        )
+      })}
+    </ul>
+  </div>
+</Layout>
+

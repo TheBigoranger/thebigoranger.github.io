@@ -1,0 +1,261 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import {
+  experiences,
+  education,
+  skills,
+  publications,
+  presentations,
+} from '../data/cv'
+import CvTimeline from '@/components/ui/CvTimeline.astro'
+
+import type {
+  Experience,
+  Education,
+  Publication,
+  Presentation,
+} from '../types/cv'
+import List from '@/components/ui/List.astro'
+
+import {
+  getYear,
+  getVenue,
+  getLink,
+  toAuthorPieces,
+  sortPublicationsNewToOld,
+} from '@/lib/publications'
+
+// ✅ CV PDF
+// import cvPdfUrl from '@/data/CV_YichengXu.pdf?url'
+const cvPdfUrl = '/CV_YichengXu.pdf'
+
+let orderedExperiences: Experience[] = []
+let orderedEducations: Education[] = []
+let orderedPublications: Publication[] = []
+let orderedPresentations: Presentation[] = []
+
+const orderElement = <T extends { time: string }>(a: T, b: T) => {
+  const presentValues = ['present', 'now', 'current', 'today']
+
+  const endA = (a.time as string)?.split(' - ')[1]?.toLowerCase()
+  const endB = (b.time as string)?.split(' - ')[1]?.toLowerCase()
+
+  if (endA && presentValues.includes(endA)) return -1
+  if (endB && presentValues.includes(endB)) return 1
+
+  const dateA = new Date((a.time as string)?.split(' - ')[1])
+  const dateB = new Date((b.time as string)?.split(' - ')[1])
+  return dateB.getTime() - dateA.getTime()
+}
+
+// Presentations with single-date times
+const parsePresentationTime = (time: string | undefined): number => {
+  if (!time) return 0
+  const t = time.toLowerCase().trim()
+  const presentValues = ['present', 'now', 'current', 'today']
+  if (presentValues.includes(t)) return Number.MAX_SAFE_INTEGER
+  const d = new Date(time)
+  return isNaN(d.getTime()) ? 0 : d.getTime()
+}
+
+if (experiences.length > 0) {
+  orderedExperiences = experiences.sort((a, b) => orderElement(a, b))
+}
+
+if (education.length > 0) {
+  orderedEducations = education.sort((a, b) => orderElement(a, b))
+}
+
+if (presentations && presentations.length > 0) {
+  orderedPresentations = presentations
+    .slice()
+    .sort((a, b) => parsePresentationTime(b.time) - parsePresentationTime(a.time))
+}
+
+if (publications.length > 0) {
+  orderedPublications = sortPublicationsNewToOld(publications)
+}
+---
+
+<Layout>
+  <!-- ✅ CV title + inline download link -->
+  <section class="mb-12">
+    <div class="flex items-center gap-4">
+      <h1 class="text-3xl font-bold">
+        Curriculum Vitae
+      </h1>
+
+      <a
+        href={cvPdfUrl}
+        download
+        class="text-sm font-medium underline underline-offset-4 hover:text-primary transition-colors"
+      >
+        Download CV (PDF)
+      </a>
+    </div>
+  </section>
+
+  {
+    orderedEducations.length > 0 && (
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold mb-6 border-b pb-2">
+          Education
+        </h2>
+        <CvTimeline elements={orderedEducations} colored={true} />
+      </section>
+    )
+  }
+
+  {
+    orderedExperiences.length > 0 && (
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold mb-6 border-b pb-2">
+          Experiences
+        </h2>
+        <CvTimeline elements={orderedExperiences} colored={true} />
+      </section>
+    )
+  }
+
+  {
+    orderedPublications.length > 0 && (
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold mb-6 border-b pb-2">
+          Publications
+        </h2>
+
+        <ul class="space-y-2">
+          {orderedPublications.map((paper) => {
+            const year = getYear(paper)
+            const venue = getVenue(paper)
+            const link = getLink(paper)
+            const authors = toAuthorPieces(paper.authors)
+
+            const metaPieces: any[] = []
+            if (venue) metaPieces.push(<span><em>{venue}</em></span>)
+            if (year) metaPieces.push(<span>{year}</span>)
+
+            if (paper.doi) {
+              metaPieces.push(
+                <a
+                  href={`https://doi.org/${paper.doi}`}
+                  target="_blank"
+                  class="underline hover:no-underline"
+                >
+                  doi:{paper.doi}
+                </a>
+              )
+            } else if (paper.arxiv) {
+              metaPieces.push(
+                <a
+                  href={`https://arxiv.org/abs/${paper.arxiv}`}
+                  target="_blank"
+                  class="underline hover:no-underline"
+                >
+                  arXiv:{paper.arxiv}
+                </a>
+              )
+            }
+
+            return (
+              <li class="text-base leading-relaxed">
+                {year && <span class="font-semibold">[{year}] </span>}
+
+                <span>
+                  {authors.map((a, idx) => (
+                    <>
+                      {idx > 0 && <span>, </span>}
+                      {idx === authors.length - 1 && authors.length > 1 && (
+                        <span>and </span>
+                      )}
+                      {a.isMe ? <strong>{a.display}</strong> : a.display}
+                    </>
+                  ))}
+                  ,{' '}
+                </span>
+
+                <span>&quot;</span>
+                {link ? (
+                  <a
+                    href={link}
+                    target="_blank"
+                    class="font-semibold underline hover:no-underline"
+                  >
+                    {paper.title}
+                  </a>
+                ) : (
+                  <span class="font-semibold">{paper.title}</span>
+                )}
+                <span>&quot;, </span>
+
+                {metaPieces.map((piece, idx) => (
+                  <>
+                    {idx > 0 && <span>, </span>}
+                    {piece}
+                  </>
+                ))}
+              </li>
+            )
+          })}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    orderedPresentations.length > 0 && (
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold mb-6 border-b pb-2">
+          Presentations &amp; Conferences
+        </h2>
+
+        <ul class="space-y-3">
+          {orderedPresentations.map((p) => (
+            <li class="text-base leading-relaxed">
+              <div class="flex justify-between gap-4">
+                <div>
+                  <div class="font-semibold">{p.title}</div>
+                  <div class="text-sm text-muted-foreground">
+                    {p.event}
+                    {p.location && <> · {p.location}</>}
+                  </div>
+                </div>
+
+                <div class="text-sm text-muted-foreground text-right">
+                  <div>{p.time}</div>
+                  {p.link && (
+                    <div>
+                      <a
+                        href={p.link}
+                        target="_blank"
+                        class="underline hover:no-underline font-medium text-blue-600"
+                      >
+                        {p.linkText ? p.linkText : 'Link'}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {p.description && (
+                <div
+                  class="text-sm mt-1 text-muted-foreground"
+                  set:html={p.description}
+                ></div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    skills.length > 0 && (
+      <section class="mb-12">
+        <List listTitle="Skills" listItems={skills} />
+      </section>
+    )
+  }
+</Layout>
+
