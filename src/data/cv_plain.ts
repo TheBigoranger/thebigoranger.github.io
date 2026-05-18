@@ -278,3 +278,40 @@ export const language = [
 	},
 
 ];
+
+export const profileName = 'Yicheng Xu';
+
+export const profileHeadline = 'Mechanical Engineer';
+
+export const headerContacts = [
+	{
+		icon: 'Envelope',
+		text: 'yichex7@uci.edu',
+		url: 'mailto:yichex7@uci.edu',
+	},
+	{
+		icon: 'Phone',
+		text: '949 469 1818',
+		url: '',
+	},
+	{
+		icon: 'MapMarker',
+		text: 'Irvine, CA',
+		url: '',
+	},
+	{
+		icon: 'Github',
+		text: 'TheBigoranger',
+		url: 'https://github.com/TheBigoranger',
+	},
+	{
+		icon: 'LinkedinSquare',
+		text: 'yichengxu97',
+		url: 'https://www.linkedin.com/in/yichengxu97/',
+	},
+	{
+		icon: 'Laptop',
+		text: 'Portfolio',
+		url: 'https://www.ethanyxu.com',
+	},
+];

@@ -10,6 +10,9 @@ import {
   selfDescription,
   awards,
   language,
+  profileName,
+  profileHeadline,
+  headerContacts,
 } from "../data/cv_plain";
 
 // ======================
@@ -133,6 +136,9 @@ const cvData = {
   links,
   awards,
   language,
+  profileName,
+  profileHeadline,
+  headerContacts,
 };
 
 const jsonPath = path.join(targetDir, "cv_plain.json");
