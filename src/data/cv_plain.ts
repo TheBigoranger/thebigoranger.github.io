@@ -152,6 +152,14 @@ export const education = [
 // New: presentations / conferences
 export const presentations = [
 	{
+		title: 'Control of Heterogeneous Multi-Agent Systems with Active Leader',
+		event: '2026 American Control Conference (ACC)',
+		time: 'May 2026',
+		location: 'New Orleans, LA, USA',
+		link: 'https://css.paperplaza.net/conferences/conferences/ACC26/program/',
+		linkText: 'Program',
+	},
+	{
 		title: 'Distributed optimization of the finite condition number of the Laplacian matrix',
 		event: '45th Southern California Control Workshop',
 		time: 'April 2025'		,
@@ -237,6 +245,15 @@ export const skills = [
 ];
 
 export const awards = [
+	{
+		title: 'CALIT2 IRT Graduate Student Mentor Stipend, University of California, Irvine',
+		time: 'Winter 2026 - Spring 2026',
+		skills: 'Mentoring, Interdisciplinary Research, Project Management',
+		details: [
+			"Awarded a $1,000 UCI stipend as graduate student mentor in the CALIT2 Interdisciplinary Research Teams (IRT) Program",
+			"Serve as PhD student mentor leading an interdisciplinary team of undergraduate researchers under faculty guidance",
+		]
+	},
 	{
 		title: 'Provincial Third Prize for National College Mathematical Contest in Modeling',
 		time: 'Sep 2018 - Dec 2018',
