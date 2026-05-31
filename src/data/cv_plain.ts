@@ -251,6 +251,7 @@ export const awards = [
 		skills: 'Mentoring, Project Management',
 		details: [
 			"Awarded a $1,000 UCI stipend as graduate student mentor in the CALIT2 IRT Program",
+			"Coordinating project direction and cross-disciplinary collaboration",
 		]
 	},
 	{
