@@ -247,7 +247,7 @@ export const skills = [
 export const awards = [
 	{
 		title: 'CALIT2 IRT Graduate Student Mentor Stipend, University of California, Irvine',
-		time: 'Winter 2026 - Spring 2026',
+		time: 'Sep 2025 - May 2026',
 		skills: 'Mentoring, Project Management',
 		details: [
 			"Awarded a $1,000 UCI stipend as graduate student mentor in the CALIT2 IRT Program",
