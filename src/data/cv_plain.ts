@@ -248,10 +248,9 @@ export const awards = [
 	{
 		title: 'CALIT2 IRT Graduate Student Mentor Stipend, University of California, Irvine',
 		time: 'Winter 2026 - Spring 2026',
-		skills: 'Mentoring, Interdisciplinary Research, Project Management',
+		skills: 'Mentoring, Project Management',
 		details: [
-			"Awarded a $1,000 UCI stipend as graduate student mentor in the CALIT2 Interdisciplinary Research Teams (IRT) Program",
-			"Serve as PhD student mentor leading an interdisciplinary team of undergraduate researchers under faculty guidance",
+			"Awarded a $1,000 UCI stipend as graduate student mentor in the CALIT2 IRT Program",
 		]
 	},
 	{
