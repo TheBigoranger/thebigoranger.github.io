@@ -1,11 +1,12 @@
 #!/bin/sh
-# Portable under `sh`/`dash` (e.g. `sudo sh deploy_astro.sh`).
+# Run on the Pi: sh deploy_astro.sh  (git push may require: sudo sh deploy_astro.sh)
 set -eu
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 BUILD="${PORTFOLIO_BUILD:-$HOME/Portfolio-build}"
+GIT_OBJECTS="${PORTFOLIO_GIT_OBJECTS:-$HOME/portfolio-git-objects}"
+SSH_CMD='ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=accept-new'
 
-# Build in a user-writable copy (server node_modules is often root-owned).
-mkdir -p "$BUILD"
+mkdir -p "$BUILD" "$GIT_OBJECTS"
 rsync -a --delete \
   --exclude node_modules \
   --exclude .git \
@@ -18,24 +19,23 @@ npm run export:cv
 npm run build
 cd "$ROOT"
 
-GIT_PORTFOLIO="git -c safe.directory=$ROOT"
-run_git_portfolio() {
-  $GIT_PORTFOLIO "$@"
-}
+export GIT_OBJECT_DIRECTORY="$GIT_OBJECTS"
+export GIT_ALTERNATE_OBJECT_DIRECTORIES="$ROOT/.git/objects"
 
-if ! run_git_portfolio add -A 2>/dev/null; then
-  echo "Git index requires elevated permissions on this host..."
-  sudo env GIT_SSH_COMMAND="ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=accept-new" \
-    git -c safe.directory="$ROOT" add -A
-  sudo env GIT_SSH_COMMAND="ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=accept-new" \
-    git -c safe.directory="$ROOT" commit -m "build: auto deploy $(date '+%Y-%m-%d %H:%M:%S')" || true
-  sudo env GIT_SSH_COMMAND="ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=accept-new" \
-    git -c safe.directory="$ROOT" push
-else
-  run_git_portfolio commit -m "build: auto deploy $(date '+%Y-%m-%d %H:%M:%S')" || true
-  run_git_portfolio push
+GIT="git -c safe.directory=$ROOT -c user.name=TheBigoranger -c user.email=ethanxuyicheng@gmail.com"
+
+$GIT add -A
+$GIT commit -m "build: auto deploy $(date '+%Y-%m-%d %H:%M:%S')" || true
+
+if ! $GIT push; then
+  echo "Retrying git push with root SSH key (sudo)..."
+  sudo env GIT_OBJECT_DIRECTORY="$GIT_OBJECTS" \
+    GIT_ALTERNATE_OBJECT_DIRECTORIES="$ROOT/.git/objects" \
+    GIT_SSH_COMMAND="$SSH_CMD" \
+    git -c safe.directory="$ROOT" -C "$ROOT" push
 fi
 
-# Push CV sources; background job refreshes PDF on Portfolio after CI.
+unset GIT_OBJECT_DIRECTORY GIT_ALTERNATE_OBJECT_DIRECTORIES
+
 cd /var/www/CV-Yicheng-Xu
 sh git_push.sh
