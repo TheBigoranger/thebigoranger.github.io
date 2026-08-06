@@ -13,26 +13,29 @@
     "export:cv": "tsx src/lib/export-cv.ts"
   },
   "dependencies": {
-    "@astrojs/react": "^5.0.4",
-    "@astrojs/rss": "^4.0.18",
-    "@astrojs/sitemap": "^3.7.2",
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.6.1",
+    "@astrojs/react": "^5.0.7",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
+    "@react-three/drei": "^10.7.8",
+    "@react-three/fiber": "^9.7.0",
     "@retorquere/bibtex-parser": "^9.0.29",
-    "@tailwindcss/vite": "~4.2.2",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "astro": "^6.3.1",
-    "daisyui": "^5.5.19",
-    "katex": "^0.16.45",
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6",
-    "tailwindcss": "~4.2.2",
-    "theme-change": "^2.5.0",
-    "three": "^0.184.0"
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "astro": "~6.4.8",
+    "daisyui": "^5.7.16",
+    "katex": "^0.16.47",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwindcss": "^4.3.3",
+    "theme-change": "^2.5.2",
+    "three": "^0.185.1"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.19",
-    "tsx": "^4.21.0"
+    "@tailwindcss/typography": "^0.5.20",
+    "tsx": "^4.23.9"
+  },
+  "overrides": {
+    "vite": "^7.3.2"
   }
 }

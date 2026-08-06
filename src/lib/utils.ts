@@ -1,12 +1,15 @@
 import { profile } from '../settings'
 import { template } from '../settings'
 
-export function highlightAuthor(authors: string): string{
-	const author = authors.split(', ')
-	if (author.includes(profile.author_name)){
-		return authors.replace(profile.author_name, `<span class='font-medium underline'>${profile.author_name}</span>`)
+export function highlightAuthor(authors: string): string {
+	const name = profile.fullName?.trim()
+	if (!name || !authors.includes(name)) {
+		return authors
 	}
-	return authors
+	return authors.replace(
+		name,
+		`<span class='font-medium underline'>${name}</span>`
+	)
 }
 
 export function trimExcerpt(excerpt: string): string {

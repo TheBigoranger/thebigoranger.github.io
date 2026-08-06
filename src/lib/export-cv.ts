@@ -115,6 +115,25 @@ if (!fs.existsSync(targetDir)) {
   throw new Error(`Target directory does not exist: ${targetDir}`);
 }
 
+/** Replace root-owned targets in a world-writable dir (common on this server). */
+function writeFileReplacing(path: string, content: string) {
+  try {
+    fs.unlinkSync(path);
+  } catch {
+    /* missing or not deletable */
+  }
+  fs.writeFileSync(path, content, "utf-8");
+}
+
+function copyFileReplacing(source: string, target: string) {
+  try {
+    fs.unlinkSync(target);
+  } catch {
+    /* missing or not deletable */
+  }
+  fs.copyFileSync(source, target);
+}
+
 // ======================
 // Build sorted cv_plain.json
 // ======================
@@ -142,7 +161,7 @@ const cvData = {
 };
 
 const jsonPath = path.join(targetDir, "cv_plain.json");
-fs.writeFileSync(jsonPath, JSON.stringify(cvData, null, 2), "utf-8");
+writeFileReplacing(jsonPath, JSON.stringify(cvData, null, 2));
 console.log(`Wrote cv_plain.json to: ${jsonPath}`);
 
 // ======================
@@ -162,7 +181,7 @@ const linksTex = (links ?? [])
   .join("\n")
   .concat("\n");
 
-fs.writeFileSync(linksTexPath, linksTex, "utf-8");
+writeFileReplacing(linksTexPath, linksTex);
 console.log(`Wrote links.tex to: ${linksTexPath}`);
 
 // ======================
@@ -177,7 +196,7 @@ if (!fs.existsSync(bibSource)) {
   throw new Error(`Mypaper.bib not found at: ${bibSource}`);
 }
 
-fs.copyFileSync(bibSource, bibTarget);
+copyFileReplacing(bibSource, bibTarget);
 console.log(`Copied Mypaper.bib → ${bibTarget}`);
 
 console.log("Export complete: cv_plain.json + links.tex + Mypaper.bib");

@@ -24,7 +24,7 @@ jobs:
         uses: withastro/action@v4
         with:
           # Astro 6 requires Node >= 22.12.0
-          node-version: 22
+          node-version: "22.12"
 
   deploy:
     needs: build
