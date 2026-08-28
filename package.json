@@ -13,29 +13,26 @@
     "export:cv": "tsx src/lib/export-cv.ts"
   },
   "dependencies": {
-    "@astrojs/react": "^5.0.7",
+    "@astrojs/react": "^6.0.4",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "@react-three/drei": "^10.7.8",
     "@react-three/fiber": "^9.7.0",
-    "@retorquere/bibtex-parser": "^9.0.29",
+    "@retorquere/bibtex-parser": "^10.0.1",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "astro": "~6.4.8",
-    "daisyui": "^5.7.16",
-    "katex": "^0.16.47",
+    "@types/react-dom": "^19.2.5",
+    "astro": "^7.2.9",
+    "daisyui": "^5.7.22",
+    "katex": "^0.18.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "tailwindcss": "^4.3.3",
-    "theme-change": "^2.5.2",
+    "theme-change": "^3.0.4",
     "three": "^0.185.1"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",
-    "tsx": "^4.23.9"
-  },
-  "overrides": {
-    "vite": "^7.3.2"
+    "tsx": "^4.23.12"
   }
 }
