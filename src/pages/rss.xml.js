@@ -1,9 +1,10 @@
 import rss from "@astrojs/rss";
 import { seo } from "../settings";
 import { getCollection } from "astro:content";
+import { compareBlogPosts } from "../lib/blog";
 
 export async function GET(context) {
-    const blog = await getCollection("blog");
+    const blog = (await getCollection("blog")).sort(compareBlogPosts);
     return rss({
         // `<title>` field in output xml
         title: seo.title,

@@ -77,10 +77,11 @@ export const toAuthorPieces = (authors: any): AuthorPiece[] => {
     const firstNorm = normalize(firsts.split(' ')[0] || '')
     const lastNorm = normalize(last.split(' ').slice(-1)[0] || '')
 
-    const isMe =
+    const isMe = Boolean(
       myLastNameNorm &&
       lastNorm === myLastNameNorm &&
       firstNorm.startsWith(myFirstNameNorm)
+    )
 
     out.push({ display, isMe })
   }

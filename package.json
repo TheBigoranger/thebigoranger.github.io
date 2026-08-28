@@ -8,6 +8,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "check": "astro check",
+    "test": "node --test tests/*.test.mjs",
+    "test:e2e": "playwright test",
     "preview": "astro preview",
     "astro": "astro",
     "export:cv": "tsx src/lib/export-cv.ts"
@@ -24,7 +27,8 @@
     "@types/react-dom": "^19.2.5",
     "astro": "^7.2.9",
     "daisyui": "^5.7.22",
-    "katex": "^0.18.4",
+    "katex": "^0.16.47",
+    "meshoptimizer": "^1.2.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "tailwindcss": "^4.3.3",
@@ -32,7 +36,17 @@
     "three": "^0.185.1"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/markdown-remark": "^7.2.4",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/typography": "^0.5.20",
-    "tsx": "^4.23.12"
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
+    "tsx": "^4.23.12",
+    "typescript": "^6.0.3",
+    "unist-util-visit": "^5.1.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
   }
 }

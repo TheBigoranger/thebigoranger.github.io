@@ -9,6 +9,19 @@ import { template } from '@/settings'
 const isBlogPopulated = await getCollection('blog').then(collection => collection.length > 0)
 
 const { fullName, title } = profile
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/'
+const links = [
+	{ href: `${template.base}/`, label: 'Home', match: '/' },
+	{ href: `${template.base}/research`, label: 'Research', match: '/research' },
+	{ href: `${template.base}/papers`, label: 'Papers', match: '/papers' },
+	{ href: `${template.base}/cv`, label: 'CV', match: '/cv' },
+	{ href: `${template.base}/project`, label: 'Projects', match: '/project' },
+]
+if (isBlogPopulated) {
+	links.push({ href: `${template.base}/blog/1`, label: 'Blog', match: '/blog' })
+}
+const isActive = (match: string) =>
+	match === '/' ? pathname === '/' : pathname === match || pathname.startsWith(`${match}/`)
 ---
 
 <aside class='px-4 pt-4 h-screen w-[20rem] bg-base-200 text-base-content flex flex-col'>
@@ -27,28 +40,17 @@ const { fullName, title } = profile
 
 			<div class='mx-4 mt-8'>
 				<ul class='space-y-4 menu grow shrink menu-md overflow-y-auto'>
-					<li>
-						<a href={`${template.base}/`} class='text-lg'>Home</a>
-					</li>
-					<li>
-						<a href={`${template.base}/research`} class='text-lg'>Research</a>
-					</li>
-					<li>
-						<a href={`${template.base}/papers`} class='text-lg'>Papers</a>
-					</li>
-					<li>
-						<a href={`${template.base}/cv`} class='text-lg'>CV</a>
-					</li>
-
-					<li>
-						<a href={`${template.base}/project`} class='text-lg'>Projects</a>
-					</li>
-
-					{isBlogPopulated && (
+					{links.map((link) => (
 						<li>
-							<a href={`${template.base}/blog/1`} class='text-lg'>Blog</a>
+							<a
+								href={link.href}
+								class:list={['text-lg', { 'menu-active font-semibold': isActive(link.match) }]}
+								aria-current={isActive(link.match) ? 'page' : undefined}
+							>
+								{link.label}
+							</a>
 						</li>
-					)}
+					))}
 				</ul>
 			</div>
 		</div>

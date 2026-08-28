@@ -2,6 +2,7 @@
 import { parse } from "@retorquere/bibtex-parser";
 // 直接把 Mypaper.bib 当作纯文本打包进来
 import bibContent from "../data/Mypaper.bib?raw";
+import type { Publication } from "../types/cv";
 
 /**
  * 递归收集 BibTeX 值里的所有字符串叶节点
@@ -82,7 +83,7 @@ function extractAuthorRaw(bib: string, key: string): string {
 }
 
 // filename 参数保留（兼容 cv.ts 的调用），但本实现忽略它
-export function loadBib(_filename: string) {
+export function loadBib(_filename: string): Publication[] {
   const lib = parse(bibContent);
 
   return lib.entries.map((entry: any) => {

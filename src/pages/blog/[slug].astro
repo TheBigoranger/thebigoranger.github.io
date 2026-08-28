@@ -1,90 +1,64 @@
 ---
-import Layout from '@/layouts/Layout.astro'
-import {template} from '@/settings'
-import {getCollection, render} from 'astro:content'
+import type { CollectionEntry } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import { blogDateISO, formatBlogDate } from "@/lib/blog";
+import { getCollection, render } from "astro:content";
 
-export async function getStaticPaths(): Promise<Array<{ params: { slug: string }, props: { post: any } }>> {
-    const blogEntries = await getCollection("blog");
-
-    const posts = blogEntries
-        .map(post => {
-        const slug = post.id
-            return {
-            params: { slug },
-            props: { post },
-            }
-    })
-    return posts
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
 }
-const {post} = Astro.props;
-const { title, date, tags} = post.data; 
-const { Content } = await render(post);
+
+const { post } = Astro.props as { post: CollectionEntry<"blog"> };
+const { title, date, tags, excerpt } = post.data;
+const { Content, headings } = await render(post);
+const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 ---
 
-<Layout title={title}>
-	<div class='max-w-4xl mx-auto'>
-		<article
-			class='prose max-w-none prose-headings:text-base-content prose-p:text-base-content/80'
-		>
-			<!-- Header section -->
-			<div class='mb-8 border-b pb-8'>
-				<h1 class='text-4xl font-bold mb-4 text-base-content'>{title}</h1>
-				<div class='flex flex-wrap items-center gap-4 text-base-content/70'>
-					<!-- Date -->
-					<time datetime={date} class='flex items-center'>
-						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							class='h-4 w-4 mr-2'
-							fill='none'
-							viewBox='0 0 24 24'
-							stroke='currentColor'
-						>
-							<path
-								stroke-linecap='round'
-								stroke-linejoin='round'
-								stroke-width='2'
-								d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'
-							></path>
-						</svg>
-						{
-							new Date(date).toLocaleDateString('en-US', {
-								year: 'numeric',
-								month: 'long',
-								day: 'numeric',
-							})
-						}
-					</time>
+<Layout title={`${title} | Yicheng Xu`} description={excerpt} type="article">
+  <div class="mx-auto w-full min-w-0 max-w-4xl">
+    <article class="prose max-w-none prose-headings:text-base-content prose-p:text-base-content/85">
+      <header class="mb-8 border-b border-base-300 pb-8">
+        <h1 class="mb-4 text-4xl font-bold text-base-content">{title}</h1>
+        <div class="flex flex-wrap items-center gap-4 text-base-content/70">
+          <time datetime={blogDateISO(date)}>{formatBlogDate(date)}</time>
+          {tags.length > 0 && (
+            <div class="flex flex-wrap gap-2">
+              {tags.map((tag: string) => (
+                <span class="badge badge-accent badge-outline">{tag}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      </header>
 
-					<!-- Tags -->
-					{
-						tags && (
-							<div class='flex flex-wrap gap-2'>
-								{tags.map(tag => (
-									<span class='badge badge-accent badge-outline'>{tag}</span>
-								))}
-							</div>
-						)
-					}
-				</div>
-			</div>
+      {toc.length > 0 && (
+        <nav aria-label="Table of contents" class="not-prose mb-10 rounded-2xl bg-base-200 p-5">
+          <h2 class="font-bold">On this page</h2>
+          <ol class="mt-3 grid gap-2 text-sm">
+            {toc.map((heading) => (
+              <li class:list={{ "pl-4": heading.depth === 3 }}>
+                <a class="link link-hover" href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
 
-			<!-- Post content -->
-			<div
-				class='prose mt-8 prose-h2:text-2xl prose-h2:font-bold prose-h2:mb-4
-         prose-h3:text-xl prose-h3:font-semibold prose-h3:mb-3
-         prose-p:mb-4 prose-p:leading-relaxed
-         prose-strong:text-base-content prose-strong:font-bold
-         prose-em:italic
-         prose-a:text-accent prose-a:no-underline hover:prose-a:underline
-         prose-code:text-accent prose-code:bg-base-200 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
-         prose-blockquote:border-l-4 prose-blockquote:border-accent prose-blockquote:pl-4 prose-blockquote:italic
-         prose-ul:list-disc prose-ul:pl-6
-         prose-ol:list-decimal prose-ol:pl-6
-         prose-li:mb-2
-         prose-img:rounded-lg prose-img:my-8'
-        >
-                <Content />
-			</div>
-		</article>
-	</div>
+      <div
+        class="prose prose-lg max-w-none
+          prose-headings:scroll-mt-6 prose-headings:text-base-content
+          prose-p:text-base-content/85 prose-li:text-base-content/85
+          prose-a:text-accent prose-a:no-underline hover:prose-a:underline
+          prose-code:rounded prose-code:bg-base-200 prose-code:px-1
+          prose-blockquote:border-accent prose-blockquote:text-base-content/80
+          prose-pre:overflow-x-auto"
+      >
+        <Content />
+      </div>
+    </article>
+  </div>
 </Layout>

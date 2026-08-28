@@ -1,14 +1,23 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import { profile } from "@/settings";
-import ModelBrowserSection from "@/components/three/ModelBrowserSection.astro";
-
+import Layout from '@/layouts/Layout.astro'
+import ProjectCard from '@/components/ui/ProjectCard.astro'
+import { projects } from '@/data/projects'
 ---
 
-<Layout title={`3D print models`} fullWidth>
-  <section class="w-full px-6 py-10">
-    <h1 class="text-4xl font-black text-center">3D print models</h1>
-    <ModelBrowserSection />
+<Layout
+  title="Projects | Yicheng Xu"
+  description="Open-source research software and mechanical design projects by Yicheng Xu."
+>
+  <section>
+    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent">Selected work</p>
+    <h1 class="mt-2 text-4xl font-black">Projects</h1>
+    <p class="mt-4 max-w-3xl text-lg leading-relaxed text-base-content/75">
+      Research software and mechanical designs built to make technical work easier to inspect,
+      reproduce, and reuse.
+    </p>
+    <div class="mt-10 grid gap-6 md:grid-cols-2">
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </div>
   </section>
 </Layout>
 

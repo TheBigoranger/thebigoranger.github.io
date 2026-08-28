@@ -1,44 +1,57 @@
 ---
-import { isSkill } from '@/types/cv';
-import type { Skill, Publication } from '@/types/cv';
-import { highlightAuthor } from '@/lib/utils'
+import type { Publication } from '@/types/cv'
+import {
+  getLink,
+  getVenue,
+  getYear,
+  toAuthorPieces,
+} from '@/lib/publications'
 
 interface Props {
-	elements: (Skill | Publication)[]
+  elements: Publication[]
 }
 
 const { elements } = Astro.props
 ---
-<ul class='space-y-8'>
-  {elements.map((element, index) => (
-    <li class='group'>
-      { isSkill(element)
-        ? <>
-        <h3 class='text-lg font-bold mb-2'>{element.title}</h3>
-        <p>{element.description}</p>
-        </> : <>
-      <a
-        href={element.link as string}
-        class='block hover:text-accent transition-colors duration-200'
-        target='_blank'
-      >
-        <h3 class='text-lg font-bold mb-2'>{element.title}</h3>
-      </a>
-      <p class='text-base mb-2'>
-        <span class='font-medium'>Authors:</span>{' '}
-        <span
-          set:html={highlightAuthor(element.authors as string)}
-        />
-      </p>
-      <p class='text-sm mb-3'>
-        <span class='italic'>{element.journal}</span> •{' '}
-        {element.time}
-      </p>
-      <p>{element.abstract}</p>
-      </>
-    }
-    {/* Uncomment this line to add a small border bottom for each element
-    {index !== elements.length -1 && <hr class="mt-6 border-primary/40" />}  */}
-    </li>
-  ))}
+
+<ul class="space-y-3">
+  {elements.map((paper) => {
+    const year = getYear(paper)
+    const venue = getVenue(paper)
+    const link = getLink(paper)
+    const authors = toAuthorPieces(paper.authors)
+
+    return (
+      <li class="leading-relaxed">
+        {year && <span class="font-semibold">[{year}] </span>}
+        <span>
+          {authors.map((author, index) => (
+            <>
+              {index > 0 && <span>{index === authors.length - 1 ? ', and ' : ', '}</span>}
+              {author.isMe ? <strong>{author.display}</strong> : author.display}
+            </>
+          ))}
+          {authors.length > 0 && ', '}
+        </span>
+        <span>“</span>
+        {link ? (
+          <a class="font-semibold underline hover:no-underline" href={link} target="_blank" rel="noopener noreferrer">
+            {paper.title}
+          </a>
+        ) : (
+          <span class="font-semibold">{paper.title}</span>
+        )}
+        <span>.”</span>
+        {venue && <span> <em>{venue}</em>.</span>}
+        <span class="ml-2 inline-flex gap-3 text-sm text-base-content/65">
+          {paper.doi && (
+            <a href={'https://doi.org/' + paper.doi} target="_blank" rel="noopener noreferrer">DOI</a>
+          )}
+          {paper.arxiv && (
+            <a href={'https://arxiv.org/abs/' + paper.arxiv} target="_blank" rel="noopener noreferrer">arXiv</a>
+          )}
+        </span>
+      </li>
+    )
+  })}
 </ul>

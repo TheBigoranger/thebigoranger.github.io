@@ -55,7 +55,7 @@ export const experiences = [
 		location: '',
 		tag: 'academic',
 		skills: 'Mentoring, Photolithography, PCB',
-		description: 'Lead interdisciplinary research team at <a href="https://irvinehackerfab.github.io/hfab-website/" class="underline text-blue-600" target="_blank">Irvine Hacker Fab</a> on lithography projects, which originated from <a href="https://ethanyxu.com/HackerFab" class="underline text-blue-600" target="_blank">HackerFab</a>',
+		description: 'Lead interdisciplinary research team at <a href="https://irvinehackerfab.github.io/hfab-website/" class="underline text-blue-600" target="_blank" rel="noopener noreferrer">Irvine Hacker Fab</a> on lithography projects, which originated from <a href="https://ethanyxu.com/HackerFab" class="underline text-blue-600" target="_blank" rel="noopener noreferrer">HackerFab</a>',
 		 details: [
 		       "Lead interdisciplinary research team at UCI's branch of Hacker Fab (https://ethanyxu.com/IrvineHackerFab)",
 		       "Spearhead development of optical lithography projects, e.g., tube furnace, spin coater, and patterning.",
@@ -69,7 +69,7 @@ export const experiences = [
 		tag: 'Work',
 		location: 'Irvine, CA, USA',
 		skills: 'Arduino, Solidworks, 3D print',
-		description: 'Development of personal hygiene device for hot, damp, and sanitized towelette delivery, detailed in <a href="https://projects.eng.uci.edu/projects/2021-2022/edi-whoopy-wipes" class="underline text-blue-600" target="_blank">EDI Whoopy Wipes</a>. It is later commercialized on <a href="https://whoopywipes.com/" class="underline text-blue-600" target="_blank">WhoopyWipes.com</a>',
+		description: 'Development of personal hygiene device for hot, damp, and sanitized towelette delivery, detailed in <a href="https://projects.eng.uci.edu/projects/2021-2022/edi-whoopy-wipes" class="underline text-blue-600" target="_blank" rel="noopener noreferrer">EDI Whoopy Wipes</a>. It is later commercialized on <a href="https://whoopywipes.com/" class="underline text-blue-600" target="_blank" rel="noopener noreferrer">WhoopyWipes.com</a>',
 		details: [
 			"Lead development of innovative personal hygiene device for hot, damp, and sanitized towelette delivery",
 			"Collaborate with cross-functional team to optimize product functionality and user experience",

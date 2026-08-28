@@ -1,8 +1,10 @@
 ---
-import ModelBrowser from "@/components/three/ModelBrowser.jsx";
+import ModelBrowser from "@/components/three/ModelBrowser";
 import { readdir } from "node:fs/promises";
 import path from "node:path";
 import { modelsMetaByBaseName } from "@/data/3Dmodels";
+import type { Dirent } from "node:fs";
+import type { ModelLink } from "@/data/3Dmodels";
 
 // Always resolve from repo root (works in dev + astro build + GitHub Actions)
 const modelsDir = path.join(process.cwd(), "public", "3Dmodels");
@@ -10,11 +12,11 @@ const modelsDir = path.join(process.cwd(), "public", "3Dmodels");
 // 3D viewer supported files (do NOT include .sldprt here)
 const allowedViewerExt = /\.(stl|obj|ply|fbx|glb)$/i;
 
-const baseName = (filename) => filename.replace(/\.[^/.]+$/, "");
-const extLower = (filename) => (filename.split(".").pop() || "").toLowerCase();
+const baseName = (filename: string) => filename.replace(/\.[^/.]+$/, "");
+const extLower = (filename: string) => (filename.split(".").pop() || "").toLowerCase();
 
 // Read directory safely (if folder missing, don't crash build)
-let entries = [];
+let entries: Dirent[] = [];
 try {
   entries = await readdir(modelsDir, { withFileTypes: true });
 } catch (err) {
@@ -23,7 +25,7 @@ try {
 }
 
 // Build a lookup: baseName -> sldprt download url (if exists)
-const sldprtByBase = new Map();
+const sldprtByBase = new Map<string, string>();
 for (const e of entries) {
   if (!e.isFile()) continue;
   if (extLower(e.name) !== "sldprt") continue;
@@ -56,11 +58,23 @@ const models = entries
   .sort((a, b) => a.name.localeCompare(b.name));
 
 // Group for expandable sidebar
-const groupMap = new Map();
+type BrowserModel = {
+  name: string;
+  base: string;
+  url: string;
+  downloadUrl: string;
+  sldprtDownloadUrl: string | null;
+  title: string;
+  description: string;
+  modelLinks: ModelLink[];
+  tag: string;
+};
+
+const groupMap = new Map<string, BrowserModel[]>();
 for (const m of models) {
   const tag = m.tag || "Others";
   if (!groupMap.has(tag)) groupMap.set(tag, []);
-  groupMap.get(tag).push(m);
+  groupMap.get(tag)?.push(m);
 }
 
 const tags = Array.from(groupMap.keys()).sort((a, b) => {
@@ -71,7 +85,7 @@ const tags = Array.from(groupMap.keys()).sort((a, b) => {
 
 const groups = tags.map((tag) => ({
   tag,
-  items: groupMap.get(tag),
+  items: groupMap.get(tag) ?? [],
 }));
 
 // Details panel mapping (keyed by the left-list filename)
@@ -159,7 +173,7 @@ const modelsClientMap = Object.fromEntries(
             if (!href) {
               return `<li class="opacity-60">${escapeHtml(l.label)} (invalid URL)</li>`;
             }
-            return `<li><a class="link link-primary" href="${href}" target="_blank" rel="noreferrer">${escapeHtml(
+            return `<li><a class="link link-primary" href="${href}" target="_blank" rel="noopener noreferrer">${escapeHtml(
               l.label
             )}</a></li>`;
           })

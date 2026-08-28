@@ -1,0 +1,30 @@
+---
+import type { ProjectRecord } from '@/data/projects'
+
+interface Props {
+  project: ProjectRecord
+}
+
+const { project } = Astro.props
+---
+
+<article class="card h-full border border-base-300 bg-base-200 shadow-sm">
+  <div class="card-body">
+    <p class="text-sm font-semibold uppercase tracking-[0.16em] text-accent">
+      {project.category}
+    </p>
+    <h2 class="card-title text-2xl">
+      <a href={project.href} class="hover:text-accent">{project.title}</a>
+    </h2>
+    <p class="leading-relaxed text-base-content/75">{project.summary}</p>
+    <ul class="mt-2 flex flex-wrap gap-2" aria-label={project.title + ' technologies'}>
+      {project.tags.map((tag) => <li class="badge badge-outline">{tag}</li>)}
+    </ul>
+    <div class="card-actions mt-4 justify-end">
+      <a class="btn btn-primary btn-sm" href={project.href}>
+        View project
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</article>

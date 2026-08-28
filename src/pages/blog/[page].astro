@@ -1,73 +1,71 @@
 ---
-import Pagination from '@/components/ui/Pagination.astro'
-import Layout from '@/layouts/Layout.astro'
-import { trimExcerpt } from '@/lib/utils'
-import { template } from '@/settings'
-import { getCollection } from 'astro:content'
+import type { GetStaticPaths, Page } from "astro";
+import Pagination from "@/components/ui/Pagination.astro";
+import Layout from "@/layouts/Layout.astro";
+import { blogDateISO, compareBlogPosts, formatBlogDate } from "@/lib/blog";
+import { trimExcerpt } from "@/lib/utils";
+import { template } from "@/settings";
+import { getCollection } from "astro:content";
 
-export async function getStaticPaths({ paginate }): Promise<Astro.getStaticPathsResult> {
-    const blogEntries = await getCollection("blog");
+type PostSummary = {
+  title: string;
+  date: Date;
+  tags: string[];
+  excerpt: string;
+  slug: string;
+};
 
-    const posts = blogEntries
-        .map(post => ({
-            title: post.data.title,
-            date: post.data.date,
-            badge: post.data.tags[0],
-            excerpt: trimExcerpt(post.data.excerpt),
-            slug: `${template.base}/blog/${post.id}`,
-        }))
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts: PostSummary[] = (await getCollection("blog"))
+    .sort(compareBlogPosts)
+    .map((post) => ({
+      title: post.data.title,
+      date: post.data.date,
+      tags: post.data.tags,
+      excerpt: trimExcerpt(post.data.excerpt),
+      slug: `${template.base}/blog/${post.id}`,
+    }));
 
-    return paginate(posts, {
-        pageSize: template.postPerPage,
-    });
-}
-const { page } = Astro.props
+  return paginate(posts, { pageSize: template.postPerPage });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props as { page: Page<PostSummary> };
 ---
 
-<Layout title='Blog'>
-    <div>
-		<h1 class='text-3xl font-bold mb-8'>Blog Posts</h1>
-		<div class='grid gap-8'>
-			{
-				page.data.map(post => (
-					<article class='card bg-base-200 transition-all'>
-						<div class='card-body'>
-							<div class='flex justify-between items-start'>
-								<h2 class='card-title text-xl'>
-                            <a href={post.slug} class='hover:text-accent'>
-										{post.title}
-									</a>
-								</h2>
-								<div class='badge badge-accent badge-outline p-4'>
-									{post.badge}
-								</div>
-							</div>
-							<time datetime={post.date} class='text-sm text-base-content/71'>
-								{new Date(post.date).toLocaleDateString('en-US', {
-									year: 'numeric',
-									month: 'long',
-									day: 'numeric',
-								})}
-							</time>
-							<p class='mt-4'>{post.excerpt}</p>
-							<div class='card-actions justify-end'>
-								<a
-                            href={post.slug}
-									class='btn btn-sm btn-secondary text-secondary-content'
-								>
-									Read More
-								</a>
-							</div>
-						</div>
-					</article>
-				))
-			}
-		</div>
-
-		<div class='flex justify-center mt-8'>
-			<Pagination page={page} />
-		</div>
+<Layout
+  title="Blog | Yicheng Xu"
+  description="Notes on control theory, optimization, dynamics, and research software."
+>
+  <div>
+    <h1 class="mb-3 text-3xl font-bold">Blog</h1>
+    <p class="mb-8 max-w-2xl text-base-content/70">
+      Technical notes on systems, optimization, and tools for control researchers.
+    </p>
+    <div class="grid gap-6">
+      {page.data.map((post) => (
+        <article class="card bg-base-200 transition-shadow hover:shadow-md">
+          <div class="card-body">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <h2 class="card-title text-xl">
+                <a href={post.slug} class="hover:text-accent">{post.title}</a>
+              </h2>
+              {post.tags[0] && (
+                <span class="badge badge-accent badge-outline">{post.tags[0]}</span>
+              )}
+            </div>
+            <time datetime={blogDateISO(post.date)} class="text-sm text-base-content/70">
+              {formatBlogDate(post.date)}
+            </time>
+            <p class="mt-3 text-base-content/80">{post.excerpt}</p>
+            <div class="card-actions justify-end">
+              <a href={post.slug} class="btn btn-sm btn-secondary">
+                Read article
+              </a>
+            </div>
+          </div>
+        </article>
+      ))}
     </div>
-
+    <Pagination page={page} />
+  </div>
 </Layout>

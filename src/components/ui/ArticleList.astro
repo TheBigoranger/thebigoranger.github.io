@@ -85,7 +85,7 @@ function arxivAbsUrl(id: string | undefined): string {
                 {/* AUTHORS (optional, NO trailing dot) */}
                 {hasAuthors && (
                   <>
-                    <span innerHTML={item.authors} />
+                    <span set:html={item.authors} />
                     {" "}
                   </>
                 )}
@@ -151,7 +151,7 @@ function arxivAbsUrl(id: string | undefined): string {
         <li class="text-base leading-relaxed">
           {hasAuthors && (
             <>
-              <span innerHTML={item.authors} />
+              <span set:html={item.authors} />
               {" "}
             </>
           )}

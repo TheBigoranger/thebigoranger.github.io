@@ -1,7 +1,117 @@
 @import "tailwindcss";
+@import "katex/dist/katex.min.css";
 
 @plugin "@tailwindcss/typography";
 
 @plugin "daisyui" {
     themes: all;
+}
+
+.equation-anchor {
+    scroll-margin-top: 2rem;
+    width: 100%;
+}
+
+.equation-anchor:target {
+    border-radius: 0.5rem;
+    background: color-mix(in oklab, var(--color-accent) 12%, transparent);
+    outline: 2px solid color-mix(in oklab, var(--color-accent) 55%, transparent);
+}
+
+.katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-block: 0.35rem;
+}
+
+.equation-anchor .katex-display > .katex > .katex-html {
+    box-sizing: border-box;
+    min-width: 100%;
+    padding-inline: 2.75rem;
+    position: relative;
+}
+
+.equation-anchor .katex-display > .katex > .katex-html > .tag {
+    inset-inline-end: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.prose pre,
+.prose pre.astro-code {
+    background: #161b22 !important;
+    border: 1px solid #30363d;
+    color: #e6edf3 !important;
+}
+
+.prose pre code,
+.prose pre code span {
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.prose pre code {
+    color: inherit;
+    display: block;
+    font-weight: 400;
+    padding: 0 !important;
+}
+
+.prose pre code::before,
+.prose pre code::after {
+    content: none !important;
+}
+
+.certificate-flow {
+    align-items: stretch;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+    margin-block: 2rem;
+}
+
+.certificate-flow__step {
+    align-items: center;
+    background: var(--color-base-200);
+    border: 1px solid var(--color-base-300);
+    border-radius: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 7rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.certificate-flow__step strong {
+    color: var(--color-base-content);
+}
+
+.certificate-flow__step span {
+    color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+    font-size: 0.875rem;
+    margin-top: 0.35rem;
+}
+
+.certificate-flow__arrow {
+    align-self: center;
+    color: var(--color-accent);
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+@media (max-width: 640px) {
+    .equation-anchor .katex-display > .katex > .katex-html {
+        padding-inline: 2rem;
+    }
+
+    .certificate-flow {
+        grid-template-columns: 1fr;
+    }
+
+    .certificate-flow__arrow {
+        transform: rotate(90deg);
+    }
 }

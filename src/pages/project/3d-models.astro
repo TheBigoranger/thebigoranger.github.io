@@ -1,0 +1,25 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import ModelBrowserSection from '@/components/three/ModelBrowserSection.astro'
+---
+
+<Layout
+  title="3D Models | Yicheng Xu"
+  description="Interactive previews and source downloads for Yicheng Xu's 3D-printing projects."
+  fullWidth
+>
+  <section class="w-full px-4 py-8 sm:px-6 sm:py-10">
+    <a href="/project" class="link link-hover text-sm">← All projects</a>
+    <div class="mt-5 text-center">
+      <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent">
+        Mechanical design
+      </p>
+      <h1 class="mt-2 text-4xl font-black">3D Models</h1>
+      <p class="mx-auto mt-4 max-w-2xl text-base-content/70">
+        Select a file to inspect it interactively, measure the geometry, or download the
+        printable mesh and available SolidWorks source.
+      </p>
+    </div>
+    <ModelBrowserSection />
+  </section>
+</Layout>

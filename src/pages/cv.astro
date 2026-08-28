@@ -16,14 +16,8 @@ import type {
   Presentation,
 } from '../types/cv'
 import List from '@/components/ui/List.astro'
-
-import {
-  getYear,
-  getVenue,
-  getLink,
-  toAuthorPieces,
-  sortPublicationsNewToOld,
-} from '@/lib/publications'
+import PublicationsList from '@/components/ui/PublicationsList.astro'
+import { sortPublicationsNewToOld } from '@/lib/publications'
 
 // ✅ CV PDF
 // import cvPdfUrl from '@/data/CV_YichengXu.pdf?url'
@@ -124,80 +118,7 @@ if (publications.length > 0) {
           Publications
         </h2>
 
-        <ul class="space-y-2">
-          {orderedPublications.map((paper) => {
-            const year = getYear(paper)
-            const venue = getVenue(paper)
-            const link = getLink(paper)
-            const authors = toAuthorPieces(paper.authors)
-
-            const metaPieces: any[] = []
-            if (venue) metaPieces.push(<span><em>{venue}</em></span>)
-            if (year) metaPieces.push(<span>{year}</span>)
-
-            if (paper.doi) {
-              metaPieces.push(
-                <a
-                  href={`https://doi.org/${paper.doi}`}
-                  target="_blank"
-                  class="underline hover:no-underline"
-                >
-                  doi:{paper.doi}
-                </a>
-              )
-            } else if (paper.arxiv) {
-              metaPieces.push(
-                <a
-                  href={`https://arxiv.org/abs/${paper.arxiv}`}
-                  target="_blank"
-                  class="underline hover:no-underline"
-                >
-                  arXiv:{paper.arxiv}
-                </a>
-              )
-            }
-
-            return (
-              <li class="text-base leading-relaxed">
-                {year && <span class="font-semibold">[{year}] </span>}
-
-                <span>
-                  {authors.map((a, idx) => (
-                    <>
-                      {idx > 0 && <span>, </span>}
-                      {idx === authors.length - 1 && authors.length > 1 && (
-                        <span>and </span>
-                      )}
-                      {a.isMe ? <strong>{a.display}</strong> : a.display}
-                    </>
-                  ))}
-                  ,{' '}
-                </span>
-
-                <span>&quot;</span>
-                {link ? (
-                  <a
-                    href={link}
-                    target="_blank"
-                    class="font-semibold underline hover:no-underline"
-                  >
-                    {paper.title}
-                  </a>
-                ) : (
-                  <span class="font-semibold">{paper.title}</span>
-                )}
-                <span>&quot;, </span>
-
-                {metaPieces.map((piece, idx) => (
-                  <>
-                    {idx > 0 && <span>, </span>}
-                    {piece}
-                  </>
-                ))}
-              </li>
-            )
-          })}
-        </ul>
+        <PublicationsList elements={orderedPublications} />
       </section>
     )
   }

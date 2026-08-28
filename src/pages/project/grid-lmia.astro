@@ -1,0 +1,153 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { getProject } from '@/data/projects'
+import { getLatestGitHubRelease } from '@/lib/github-release'
+import katex from 'katex'
+
+const project = getProject('grid-lmia')
+const release = await getLatestGitHubRelease(
+  project.repository!,
+  project.fallbackRelease!,
+)
+const linkByLabel = Object.fromEntries(project.links.map((link) => [link.label, link]))
+const matlabExample = `yalmip("clear")
+
+grid = {[0 1], [-1 1]};
+A = pdmat(grid, ...
+    @(rho, eta) [1 + rho, eta; eta, 2 + eta.^2], ...
+    Degree=[1 2]);
+P = pdvar(2, grid, "symmetric", Degree=[1 2]);
+
+constraint = P >= A;
+F = constraint.toYalmip();
+solution = optimize(F);
+assert(solution.problem == 0)`;
+const problemEquation = katex.renderToString(
+  String.raw`\mathcal F(\rho,\dot\rho;y)
+  =F_0(\rho)
+  +\sum_{k=1}^{N}F_k(\rho)y_k(\rho)
+  -\sum_{k=1}^{N}\sum_{s=1}^{\ell}
+  \dot\rho_sF_{k,s}(\rho)
+  \frac{\partial y_k}{\partial\rho_s}(\rho)
+  \preceq0,\ \forall(\rho,\dot\rho)\in\mathcal P\times\mathcal R.`,
+  { displayMode: true, throwOnError: true },
+)
+---
+
+<Layout
+  title="GriD-LMIA | Yicheng Xu"
+  description={project.summary}
+>
+  <article class="mx-auto max-w-4xl">
+    <a href="/project" class="link link-hover text-sm">← All projects</a>
+
+    <header class="mt-6 border-b border-base-300 pb-10">
+      <div class="flex flex-wrap items-center gap-3">
+        <p class="text-sm font-semibold uppercase tracking-[0.18em] text-accent">
+          {project.category}
+        </p>
+        <a
+          class="badge badge-outline"
+          href={release.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={release.source === 'fallback' ? 'Fallback release metadata' : 'Latest GitHub release'}
+        >
+          {release.tagName}
+        </a>
+      </div>
+      <h1 class="mt-3 text-5xl font-black tracking-tight">GriD-LMIA</h1>
+      <p class="mt-5 text-xl leading-relaxed text-base-content/75">{project.summary}</p>
+      <div class="mt-7 flex flex-wrap gap-3">
+        <a class="btn btn-primary" href={linkByLabel.Documentation.href} target="_blank" rel="noopener noreferrer">
+          Read documentation
+        </a>
+        <a class="btn btn-outline" href={linkByLabel.GitHub.href} target="_blank" rel="noopener noreferrer">
+          View source
+        </a>
+        <a class="btn btn-ghost" href={linkByLabel.Paper.href} target="_blank" rel="noopener noreferrer">
+          Read paper
+        </a>
+      </div>
+    </header>
+
+    <div class="prose mt-10 max-w-none prose-headings:text-base-content prose-p:text-base-content/80">
+      <h2>The problem it solves</h2>
+      <p>
+        Parameter-dependent linear matrix inequalities must hold over a continuous parameter
+        domain. When scheduling parameters vary with time, derivatives of parameter-dependent
+        decisions also enter the conditions. Standard semidefinite programming solvers need a
+        finite collection of constraints, so the continuum condition needs a finite certificate.
+      </p>
+      <div class="project-problem-equation not-prose my-7 rounded-2xl border border-accent/35 bg-accent/10 px-4 py-5">
+        <div set:html={problemEquation} />
+        <p class="mt-3 text-center text-sm text-base-content/70">
+          Search for parameter-dependent decision functions that certify the matrix inequality
+          over every admissible parameter and rate—not only at sampled points.
+        </p>
+      </div>
+
+      <h2>How GriD-LMIA represents the problem</h2>
+      <div class="not-prose grid gap-4 sm:grid-cols-2">
+        <section class="rounded-xl bg-base-200 p-5">
+          <h3 class="font-bold">pdmat</h3>
+          <p class="mt-2 text-sm leading-relaxed text-base-content/70">
+            Known parameter-dependent matrix data represented cell by cell.
+          </p>
+        </section>
+        <section class="rounded-xl bg-base-200 p-5">
+          <h3 class="font-bold">pdvar</h3>
+          <p class="mt-2 text-sm leading-relaxed text-base-content/70">
+            Continuous parameter-dependent decision matrices with shared face values.
+          </p>
+        </section>
+        <section class="rounded-xl bg-base-200 p-5">
+          <h3 class="font-bold">rhodiff</h3>
+          <p class="mt-2 text-sm leading-relaxed text-base-content/70">
+            Cell-wise derivatives evaluated against scheduling-rate vertices.
+          </p>
+        </section>
+        <section class="rounded-xl bg-base-200 p-5">
+          <h3 class="font-bold">pdlmi</h3>
+          <p class="mt-2 text-sm leading-relaxed text-base-content/70">
+            Direct, Pólya, and box-specific Gram certificates exported to YALMIP.
+          </p>
+        </section>
+      </div>
+
+      <h2>Minimal anisotropic example</h2>
+      <pre><code class="language-matlab">{matlabExample}</code></pre>
+
+      <h2>Certificate choices</h2>
+      <p>
+        Direct Bernstein coefficient inequalities are the default. Pólya elevation, Putinar,
+        SparsePutinar, SparseFullBox, and FullBox certificates are explicit alternatives. A
+        failed finite certificate is inconclusive for the original continuous-domain inequality;
+        solver results should only be accepted after checking the YALMIP diagnostic.
+      </p>
+
+      <h2>Requirements and scope</h2>
+      <ul>
+        <li>MATLAB, a complete YALMIP installation, and a supported SDP solver.</li>
+        <li>Tensor-product box grids and affine decision expressions.</li>
+        <li>Box-specific fixed-order certificates rather than a general SOS parser.</li>
+      </ul>
+
+      <div class="not-prose mt-10 rounded-2xl border border-base-300 bg-base-200 p-6">
+        <h2 class="text-xl font-bold">Continue with the project</h2>
+        <div class="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+          {project.links.map((link) => (
+            <a
+              class="link link-primary"
+              href={link.href}
+              target={link.external ? '_blank' : undefined}
+              rel={link.external ? 'noopener noreferrer' : undefined}
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </article>
+</Layout>
