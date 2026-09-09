@@ -17,10 +17,15 @@ $$
 \label{norm-comparison}
 $$
 
+<details open>
+<summary>Proof of the norm comparison</summary>
+
 For the first inequality, normalize $y=x/\lVert x\rVert_q$. Since
 $|y_i|\le1$, $\sum_i|y_i|^p\le\sum_i|y_i|^q=1$. The second follows from
 Hölder's inequality. The dimension factor in $\eqref{norm-comparison}$
 matters whenever estimates are expected to scale with $n$.
+
+</details>
 
 ## Dual, polar, and normal cones
 
@@ -57,6 +62,9 @@ when $x^\top Ax\ge0$ for every $x$. Equivalent characterizations include
 $A=PP^\top$ for some $P$, nonnegative eigenvalues, and nonnegative principal
 minors.
 
+<details open>
+<summary>Proof of the trace criterion</summary>
+
 If $A=PP^\top\succeq0$ and $B=QQ^\top\succeq0$, then
 
 $$
@@ -69,6 +77,8 @@ $$
 Notice that $\eqref{psd-trace}$ is a squared Frobenius norm, not the square of
 $\operatorname{tr}(P^\top Q)$. Moreover,
 $\operatorname{tr}(AB)=0$ implies $Q^\top P=0$ and therefore $AB=0$.
+
+</details>
 
 ## Schur complements
 

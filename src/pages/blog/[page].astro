@@ -3,7 +3,6 @@ import type { GetStaticPaths, Page } from "astro";
 import Pagination from "@/components/ui/Pagination.astro";
 import Layout from "@/layouts/Layout.astro";
 import { blogDateISO, compareBlogPosts, formatBlogDate } from "@/lib/blog";
-import { trimExcerpt } from "@/lib/utils";
 import { template } from "@/settings";
 import { getCollection } from "astro:content";
 
@@ -22,7 +21,7 @@ export const getStaticPaths = (async ({ paginate }) => {
       title: post.data.title,
       date: post.data.date,
       tags: post.data.tags,
-      excerpt: trimExcerpt(post.data.excerpt),
+      excerpt: post.data.excerpt,
       slug: `${template.base}/blog/${post.id}`,
     }));
 
@@ -35,37 +34,30 @@ const { page } = Astro.props as { page: Page<PostSummary> };
 <Layout
   title="Blog | Yicheng Xu"
   description="Notes on control theory, optimization, dynamics, and research software."
+  variant="blog"
 >
-  <div>
-    <h1 class="mb-3 text-3xl font-bold">Blog</h1>
-    <p class="mb-8 max-w-2xl text-base-content/70">
-      Technical notes on systems, optimization, and tools for control researchers.
-    </p>
-    <div class="grid gap-6">
+  <div class="blog-index">
+    <header class="blog-index-intro">
+      <h1>Blog</h1>
+      <p>Technical notes on systems, optimization, and tools for control researchers.</p>
+    </header>
+    <div class="blog-stream">
       {page.data.map((post) => (
-        <article class="card bg-base-200 transition-shadow hover:shadow-md">
-          <div class="card-body">
-            <div class="flex flex-wrap items-start justify-between gap-3">
-              <h2 class="card-title text-xl">
-                <a href={post.slug} class="hover:text-accent">{post.title}</a>
-              </h2>
-              {post.tags[0] && (
-                <span class="badge badge-accent badge-outline">{post.tags[0]}</span>
-              )}
-            </div>
-            <time datetime={blogDateISO(post.date)} class="text-sm text-base-content/70">
-              {formatBlogDate(post.date)}
-            </time>
-            <p class="mt-3 text-base-content/80">{post.excerpt}</p>
-            <div class="card-actions justify-end">
-              <a href={post.slug} class="btn btn-sm btn-secondary">
-                Read article
-              </a>
+        <article class="blog-stream-item">
+          <div class="blog-stream-content">
+            <time datetime={blogDateISO(post.date)}>{formatBlogDate(post.date)}</time>
+            <h2><a href={post.slug}>{post.title}</a></h2>
+            <p>{post.excerpt}</p>
+            <div class="blog-tags" aria-label="Tags">
+              {post.tags.map((tag) => <span>{tag}</span>)}
             </div>
           </div>
+          <a href={post.slug} class="blog-read-link" aria-label={`Read ${post.title}`}>
+            Read article <span aria-hidden="true">→</span>
+          </a>
         </article>
       ))}
     </div>
-    <Pagination page={page} />
+    <div class="blog-pagination"><Pagination page={page} /></div>
   </div>
 </Layout>

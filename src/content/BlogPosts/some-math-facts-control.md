@@ -18,6 +18,9 @@ A^\top P+PA=-Q.
 \label{ct-lyapunov}
 $$
 
+<details open>
+<summary>Proof of the continuous-time Lyapunov theorem</summary>
+
 For the forward direction, define
 
 $$
@@ -31,12 +34,18 @@ $x^\top Px=\int_0^\infty(e^{At}x)^\top Q(e^{At}x)\,dt>0$. Differentiating
 $e^{A^\top t}Qe^{At}$ and integrating from zero to infinity yields
 $A^\top P+PA=-Q$.
 
+<details>
+<summary>Converse direction</summary>
+
 Conversely, suppose $P\succ0$ and $A^\top P+PA\prec0$. If $A$ were not
 Hurwitz, there would exist a nonzero (possibly complex) initial direction
 whose trajectory does not converge exponentially to zero. It is not true
 that *every* nonzero initial condition must fail to converge. The quadratic
 Lyapunov inequality nevertheless implies uniform exponential decay for all
 real initial conditions, giving the contradiction.
+
+</details>
+</details>
 
 ## Discrete-time Lyapunov stability
 
@@ -50,6 +59,9 @@ F^\top PF-P=-Q.
 \label{dt-lyapunov}
 $$
 
+<details open>
+<summary>Proof of the forward direction</summary>
+
 When $F$ is Schur,
 
 $$
@@ -57,8 +69,10 @@ P=\sum_{k=0}^{\infty}(F^\top)^kQF^k
 \label{dt-series}
 $$
 
-is convergent and satisfies $\eqref{dt-lyapunov}` by telescoping. This is the
+is convergent and satisfies $\eqref{dt-lyapunov}$ by telescoping. This is the
 discrete analogue of $\eqref{ct-integral}$.
+
+</details>
 
 ## Sampling and the matrix exponential
 

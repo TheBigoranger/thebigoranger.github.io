@@ -85,3 +85,115 @@ test("navigation exposes an active page on desktop and mobile", async ({ page, i
   if (isMobile) await page.getByLabel("Open navigation").click();
   await expect(page.locator('a[aria-current="page"]')).toHaveText("Projects");
 });
+
+test("blog routes lock light mode and restore the saved preference after navigation", async ({ page, isMobile }) => {
+  await page.addInitScript(() => localStorage.setItem("theme", "dark"));
+  await page.goto("/blog/1/");
+
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(page.locator('[data-toggle-theme]')).toHaveCount(0);
+
+  if (isMobile) await page.getByLabel("Open navigation").click();
+  await page.getByRole("link", { name: "Home", exact: true }).click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+});
+
+test("blog index renders an open article stream with full metadata", async ({ page }) => {
+  await page.goto("/blog/1/");
+  const posts = page.locator(".blog-stream-item");
+
+  await expect(posts).toHaveCount(4);
+  await expect(posts.first().locator("h2")).toHaveText("Introducing GriD-LMIA");
+  await expect(posts.first().locator("p")).toHaveText(
+    "An introduction to GriD-LMIA, a MATLAB toolbox for constructing and certifying parameter-dependent LMIs on boxes.",
+  );
+  await expect(posts.first().locator(".blog-tags span")).toHaveCount(3);
+  await expect(page.getByText("Linear Algebra", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Read Introducing GriD-LMIA/ })).toContainText("Read article");
+  await expect(page.locator('.blog-pagination [aria-current="page"]')).toHaveText("1 / 1");
+});
+
+test("article and table of contents share numbered stable anchors", async ({ page, isMobile }) => {
+  await page.goto("/blog/some-math-facts-algebra/");
+  const heading = page.locator('.blog-prose [data-heading-number="1"]').first();
+  const headingId = await heading.getAttribute("id");
+
+  expect(headingId).toBe("norm-comparisons");
+  await expect(heading.locator('.heading-number[aria-hidden="true"]')).toHaveAttribute("data-number", "1");
+  await expect(page.locator(`[data-toc-link][data-toc-slug="${headingId}"]`).first()).toContainText("1.");
+  if (isMobile) {
+    await page.getByRole("button", { name: "Open table of contents" }).click();
+    await page.locator("#blog-toc-dialog").locator(`a[href="#${headingId}"]`).click();
+  } else {
+    await page.locator(".blog-toc-desktop").locator(`a[href="#${headingId}"]`).click();
+  }
+  await expect(page).toHaveURL(new RegExp(`#${headingId}$`));
+
+  const equationReference = page.locator('a[href="#eq-cone-normal"]').first();
+  await expect(equationReference).toHaveText("(3)");
+});
+
+test("desktop table of contents stays sticky and follows reading position", async ({ page, isMobile }) => {
+  test.skip(Boolean(isMobile), "Desktop-only persistent table of contents");
+  await page.goto("/blog/some-math-facts-algebra/");
+
+  const toc = page.locator(".blog-toc-desktop");
+  await expect(toc).toBeVisible();
+  await expect(toc).toHaveCSS("position", "sticky");
+  await expect(toc.locator('[data-toc-link][aria-current="location"]')).toHaveCount(1);
+
+  const target = page.locator('.blog-prose [data-heading-number="4"]');
+  await target.evaluate((element) => {
+    const top = element.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top, behavior: "instant" });
+  });
+  await expect.poll(async () => toc.locator('[data-toc-link][aria-current="location"]').getAttribute("data-toc-number"))
+    .toBe("4");
+  await expect.poll(async () => Number(await toc.locator('[role="progressbar"]').getAttribute("aria-valuenow")))
+    .toBeGreaterThan(0);
+});
+
+test("mobile table of contents supports every close path", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "Mobile-only table of contents drawer");
+  await page.goto("/blog/some-math-facts-control/");
+
+  const trigger = page.getByRole("button", { name: "Open table of contents" });
+  const dialog = page.locator("#blog-toc-dialog");
+  await expect(dialog).not.toHaveAttribute("open", "");
+
+  await trigger.click();
+  await expect(dialog).toHaveAttribute("open", "");
+  await page.keyboard.press("Escape");
+  await expect(dialog).not.toHaveAttribute("open", "");
+
+  await trigger.click();
+  await page.getByRole("button", { name: "Close table of contents" }).click();
+  await expect(dialog).not.toHaveAttribute("open", "");
+
+  await trigger.click();
+  await dialog.locator("[data-toc-link]").nth(1).click();
+  await expect(dialog).not.toHaveAttribute("open", "");
+  await expect(page).toHaveURL(/#discrete-time-lyapunov-stability$/);
+
+  await trigger.click();
+  await dialog.click({ position: { x: 8, y: 120 } });
+  await expect(dialog).not.toHaveAttribute("open", "");
+});
+
+test("proof details preserve keyboard behavior, nesting, and contained math", async ({ page }) => {
+  await page.goto("/blog/some-math-facts-control/");
+  const outer = page.locator(".blog-prose details").first();
+  const summary = outer.locator(":scope > summary");
+  const converse = outer.locator(":scope > details");
+
+  await expect(outer).toHaveAttribute("open", "");
+  await expect(converse).not.toHaveAttribute("open", "");
+  await summary.focus();
+  await page.keyboard.press("Enter");
+  await expect(outer).not.toHaveAttribute("open", "");
+  await page.keyboard.press("Enter");
+  await expect(outer).toHaveAttribute("open", "");
+  await expect(outer.locator(".katex-display").first()).toBeVisible();
+  expect(await outer.evaluate((element) => element.scrollWidth <= element.clientWidth + 1)).toBeTruthy();
+});

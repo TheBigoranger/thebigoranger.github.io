@@ -9,6 +9,7 @@ import remarkMath from "remark-math";
 
 import sitemap from "@astrojs/sitemap";
 import rehypeEquationReferences from "./src/lib/rehype-equation-references.mjs";
+import rehypeHeadingNumbers from "./src/lib/rehype-heading-numbers.mjs";
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,6 +18,7 @@ export default defineConfig({
         processor: unified({
             remarkPlugins: [remarkMath],
             rehypePlugins: [
+                rehypeHeadingNumbers,
                 rehypeEquationReferences,
                 [
                     rehypeKatex,

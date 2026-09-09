@@ -1,0 +1,377 @@
+---
+import BlogTocList, { type TocItem } from './BlogTocList.astro'
+import { buildHeadingTree } from '@/lib/heading-numbers.mjs'
+
+type NumberedHeading = {
+  slug: string
+  text: string
+  depth: number
+  number: string
+  relativeLevel: number
+}
+
+interface Props {
+  headings: NumberedHeading[]
+}
+
+const { headings } = Astro.props
+const tree = buildHeadingTree(headings) as TocItem[]
+---
+
+<div class="blog-toc-shell" data-blog-toc>
+  <aside class="blog-toc-desktop" aria-label="Table of contents">
+    <h2>On this page</h2>
+    <div
+      class="reading-progress"
+      role="progressbar"
+      aria-label="Article reading progress"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+    >
+      <span data-reading-progress></span>
+    </div>
+    <BlogTocList items={tree} root />
+  </aside>
+
+  <button
+    class="blog-toc-trigger"
+    type="button"
+    aria-label="Open table of contents"
+    aria-controls="blog-toc-dialog"
+    aria-expanded="false"
+    data-toc-open
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+    </svg>
+  </button>
+
+  <dialog id="blog-toc-dialog" class="blog-toc-dialog" data-toc-dialog>
+    <section class="blog-toc-panel" aria-label="Table of contents">
+      <header>
+        <h2>On this page</h2>
+        <button type="button" aria-label="Close table of contents" data-toc-close>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        </button>
+      </header>
+      <div
+        class="reading-progress"
+        role="progressbar"
+        aria-label="Article reading progress"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+      >
+        <span data-reading-progress></span>
+      </div>
+      <nav aria-label="On this page">
+        <BlogTocList items={tree} root />
+      </nav>
+    </section>
+  </dialog>
+</div>
+
+<script>
+  let disposeBlogToc: (() => void) | undefined
+
+  function initialiseBlogToc() {
+    disposeBlogToc?.()
+
+    const root = document.querySelector<HTMLElement>('[data-blog-toc]')
+    if (!root) {
+      disposeBlogToc = undefined
+      return
+    }
+
+    const controller = new AbortController()
+    const { signal } = controller
+    const dialog = root.querySelector<HTMLDialogElement>('[data-toc-dialog]')
+    const openButton = root.querySelector<HTMLButtonElement>('[data-toc-open]')
+    const closeButton = root.querySelector<HTMLButtonElement>('[data-toc-close]')
+    const links = [...root.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')]
+    const progressBars = [...root.querySelectorAll<HTMLElement>('[role="progressbar"]')]
+    const article = document.querySelector<HTMLElement>('[data-blog-article]')
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const sections = links
+      .map((link) => document.getElementById(link.dataset.tocSlug ?? ''))
+      .filter((section, index, all): section is HTMLElement =>
+        section instanceof HTMLElement && all.indexOf(section) === index
+      )
+
+    const closeDialog = () => {
+      if (dialog?.open) dialog.close()
+    }
+
+    openButton?.addEventListener('click', () => {
+      dialog?.showModal()
+      openButton.setAttribute('aria-expanded', 'true')
+    }, { signal })
+    closeButton?.addEventListener('click', closeDialog, { signal })
+    dialog?.addEventListener('close', () => {
+      openButton?.setAttribute('aria-expanded', 'false')
+    }, { signal })
+    dialog?.addEventListener('click', (event) => {
+      if (event.target === dialog) closeDialog()
+    }, { signal })
+
+    for (const link of links) {
+      link.addEventListener('click', (event) => {
+        const target = document.getElementById(link.dataset.tocSlug ?? '')
+        if (!target) return
+
+        event.preventDefault()
+        closeDialog()
+        target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' })
+        history.pushState(null, '', link.hash)
+      }, { signal })
+    }
+
+    let animationFrame = 0
+    const update = () => {
+      animationFrame = 0
+      const activationLine = window.innerHeight * 0.28
+      let activeSection = sections[0]
+
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= activationLine) activeSection = section
+        else break
+      }
+
+      const lastSection = sections.at(-1)
+      if (lastSection && window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+        activeSection = lastSection
+      }
+
+      const activeLink = links.find((link) => link.dataset.tocSlug === activeSection?.id)
+      const activeNumber = activeLink?.dataset.tocNumber ?? ''
+
+      for (const link of links) {
+        const isCurrent = link.dataset.tocSlug === activeSection?.id
+        if (isCurrent) link.setAttribute('aria-current', 'location')
+        else link.removeAttribute('aria-current')
+      }
+
+      for (const item of root.querySelectorAll<HTMLElement>('[data-toc-item]')) {
+        const number = item.dataset.tocNumber ?? ''
+        item.classList.toggle('is-active-path', Boolean(number && activeNumber.startsWith(`${number}.`)))
+      }
+
+      if (article) {
+        const bounds = article.getBoundingClientRect()
+        const articleTop = bounds.top + window.scrollY
+        const scrollable = Math.max(article.offsetHeight - window.innerHeight, 1)
+        const progress = Math.min(100, Math.max(0, ((window.scrollY - articleTop) / scrollable) * 100))
+
+        for (const progressBar of progressBars) {
+          progressBar.setAttribute('aria-valuenow', String(Math.round(progress)))
+          const fill = progressBar.querySelector<HTMLElement>('[data-reading-progress]')
+          if (fill) fill.style.width = `${progress}%`
+        }
+      }
+    }
+
+    const requestUpdate = () => {
+      if (!animationFrame) animationFrame = window.requestAnimationFrame(update)
+    }
+
+    window.addEventListener('scroll', requestUpdate, { passive: true, signal })
+    window.addEventListener('resize', requestUpdate, { passive: true, signal })
+    update()
+
+    disposeBlogToc = () => {
+      controller.abort()
+      if (animationFrame) window.cancelAnimationFrame(animationFrame)
+      closeDialog()
+    }
+  }
+
+  document.addEventListener('astro:page-load', initialiseBlogToc)
+  initialiseBlogToc()
+</script>
+
+<style>
+  .blog-toc-shell {
+    min-width: 0;
+  }
+
+  .blog-toc-desktop {
+    display: none;
+  }
+
+  .blog-toc-trigger {
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #d9e1e7;
+    border-radius: 0.75rem;
+    bottom: max(1.25rem, env(safe-area-inset-bottom));
+    box-shadow: 0 0.75rem 2rem rgb(15 23 42 / 14%);
+    color: #087f94;
+    display: inline-flex;
+    height: 2.75rem;
+    justify-content: center;
+    position: fixed;
+    right: max(1.25rem, env(safe-area-inset-right));
+    width: 2.75rem;
+    z-index: 45;
+  }
+
+  .blog-toc-trigger:hover,
+  .blog-toc-trigger:focus-visible {
+    background: #ecfeff;
+    border-color: #0891b2;
+  }
+
+  .blog-toc-trigger:focus-visible,
+  .blog-toc-panel button:focus-visible {
+    outline: 3px solid rgb(6 182 212 / 35%);
+    outline-offset: 3px;
+  }
+
+  svg {
+    fill: none;
+    height: 1.35rem;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+    width: 1.35rem;
+  }
+
+  .blog-toc-dialog {
+    background: transparent;
+    border: 0;
+    height: 100dvh;
+    margin: 0 0 0 auto;
+    max-height: none;
+    max-width: none;
+    padding: 0;
+    width: 100vw;
+  }
+
+  .blog-toc-dialog::backdrop {
+    background: rgb(15 23 42 / 52%);
+  }
+
+  .blog-toc-panel {
+    background: #ffffff;
+    color: #172033;
+    height: 100%;
+    margin-left: auto;
+    max-width: 23rem;
+    overflow-y: auto;
+    padding: max(1.5rem, env(safe-area-inset-top)) 1.5rem max(1.5rem, env(safe-area-inset-bottom));
+    width: 88vw;
+  }
+
+  .blog-toc-panel header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .blog-toc-panel h2,
+  .blog-toc-desktop h2 {
+    font-size: 1.05rem;
+    font-weight: 750;
+    margin: 0;
+  }
+
+  .blog-toc-panel button {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 0.5rem;
+    color: inherit;
+    display: inline-flex;
+    height: 2.75rem;
+    justify-content: center;
+    width: 2.75rem;
+  }
+
+  .reading-progress {
+    background: #e8edf0;
+    border-radius: 999px;
+    height: 0.25rem;
+    margin: 1rem 0 1.25rem;
+    overflow: hidden;
+  }
+
+  .reading-progress span {
+    background: #0891b2;
+    display: block;
+    height: 100%;
+    transition: width 120ms linear;
+    width: 0;
+  }
+
+  :global(.toc-list) {
+    display: grid;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 0.85rem;
+  }
+
+  :global(.toc-list-root) {
+    padding-left: 0;
+  }
+
+  :global([data-toc-item] > a) {
+    align-items: baseline;
+    border-left: 2px solid transparent;
+    color: #4b5563;
+    display: grid;
+    font-size: 0.875rem;
+    gap: 0.45rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    line-height: 1.45;
+    padding: 0.38rem 0.35rem 0.38rem 0.65rem;
+    text-decoration: none;
+    transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
+  }
+
+  :global([data-toc-item] > a:hover),
+  :global([data-toc-item] > a:focus-visible),
+  :global([data-toc-item].is-active-path > a) {
+    color: #087f94;
+  }
+
+  :global([data-toc-item] > a[aria-current]) {
+    background: #ecfeff;
+    border-left-color: #0891b2;
+    color: #087f94;
+    font-weight: 650;
+  }
+
+  :global(.toc-number) {
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (min-width: 80rem) {
+    .blog-toc-desktop {
+      display: block;
+      max-height: calc(100vh - 5rem);
+      overflow-y: auto;
+      padding-left: 1rem;
+      position: sticky;
+      top: 2.5rem;
+    }
+
+    .blog-toc-trigger,
+    .blog-toc-dialog {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reading-progress span,
+    :global([data-toc-item] > a) {
+      transition: none;
+    }
+  }
+</style>

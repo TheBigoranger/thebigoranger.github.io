@@ -1,0 +1,35 @@
+---
+export type TocItem = {
+  slug: string
+  text: string
+  number: string
+  relativeLevel: number
+  children: TocItem[]
+}
+
+interface Props {
+  items: TocItem[]
+  root?: boolean
+}
+
+const { items, root = false } = Astro.props
+---
+
+<ol class:list={['toc-list', { 'toc-list-root': root }]}>
+  {items.map((item) => (
+    <li data-toc-item data-toc-number={item.number}>
+      <a
+        href={`#${item.slug}`}
+        data-toc-link
+        data-toc-number={item.number}
+        data-toc-slug={item.slug}
+      >
+        <span class="toc-number" aria-hidden="true">{item.number}.</span>
+        <span>{item.text}</span>
+      </a>
+      {item.children.length > 0 && (
+        <Astro.self items={item.children} />
+      )}
+    </li>
+  ))}
+</ol>

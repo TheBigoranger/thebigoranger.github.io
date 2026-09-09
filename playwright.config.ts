@@ -11,11 +11,17 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   projects: [
-    { name: "desktop-chromium", use: { ...devices["Desktop Chrome"] } },
+    {
+      name: "desktop-chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1536, height: 1024 },
+      },
+    },
     { name: "mobile-chromium", use: { ...devices["Pixel 7"] } },
   ],
   webServer: {
-    command: "npm run preview -- --host 127.0.0.1 --port 4322",
+    command: "python3 -m http.server 4322 --bind 127.0.0.1 --directory dist",
     url: "http://127.0.0.1:4322",
     reuseExistingServer: true,
     timeout: 120_000,

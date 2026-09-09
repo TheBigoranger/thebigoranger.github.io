@@ -1,7 +1,9 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import BlogToc from "@/components/ui/BlogToc.astro";
 import Layout from "@/layouts/Layout.astro";
 import { blogDateISO, formatBlogDate } from "@/lib/blog";
+import { numberHeadings } from "@/lib/heading-numbers.mjs";
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
@@ -15,50 +17,32 @@ export async function getStaticPaths() {
 const { post } = Astro.props as { post: CollectionEntry<"blog"> };
 const { title, date, tags, excerpt } = post.data;
 const { Content, headings } = await render(post);
-const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const toc = numberHeadings(headings);
 ---
 
-<Layout title={`${title} | Yicheng Xu`} description={excerpt} type="article">
-  <div class="mx-auto w-full min-w-0 max-w-4xl">
-    <article class="prose max-w-none prose-headings:text-base-content prose-p:text-base-content/85">
-      <header class="mb-8 border-b border-base-300 pb-8">
-        <h1 class="mb-4 text-4xl font-bold text-base-content">{title}</h1>
-        <div class="flex flex-wrap items-center gap-4 text-base-content/70">
+<Layout title={`${title} | Yicheng Xu`} description={excerpt} type="article" fullWidth variant="blog">
+  <div class="blog-article-layout">
+    <article class="blog-article" data-blog-article>
+      <header class="blog-article-header">
+        <h1>{title}</h1>
+        <div class="blog-article-meta">
           <time datetime={blogDateISO(date)}>{formatBlogDate(date)}</time>
           {tags.length > 0 && (
-            <div class="flex flex-wrap gap-2">
+            <div class="blog-tags" aria-label="Tags">
               {tags.map((tag: string) => (
-                <span class="badge badge-accent badge-outline">{tag}</span>
+                <span>{tag}</span>
               ))}
             </div>
           )}
         </div>
       </header>
 
-      {toc.length > 0 && (
-        <nav aria-label="Table of contents" class="not-prose mb-10 rounded-2xl bg-base-200 p-5">
-          <h2 class="font-bold">On this page</h2>
-          <ol class="mt-3 grid gap-2 text-sm">
-            {toc.map((heading) => (
-              <li class:list={{ "pl-4": heading.depth === 3 }}>
-                <a class="link link-hover" href={`#${heading.slug}`}>{heading.text}</a>
-              </li>
-            ))}
-          </ol>
-        </nav>
-      )}
-
       <div
-        class="prose prose-lg max-w-none
-          prose-headings:scroll-mt-6 prose-headings:text-base-content
-          prose-p:text-base-content/85 prose-li:text-base-content/85
-          prose-a:text-accent prose-a:no-underline hover:prose-a:underline
-          prose-code:rounded prose-code:bg-base-200 prose-code:px-1
-          prose-blockquote:border-accent prose-blockquote:text-base-content/80
-          prose-pre:overflow-x-auto"
+        class="blog-prose prose max-w-none prose-headings:scroll-mt-8 prose-a:no-underline hover:prose-a:underline prose-pre:overflow-x-auto"
       >
         <Content />
       </div>
     </article>
+    {toc.length > 0 && <BlogToc headings={toc} />}
   </div>
 </Layout>
