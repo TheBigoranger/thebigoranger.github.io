@@ -31,22 +31,34 @@ test("primary routes render without browser errors", async ({ page }) => {
 test("equation references navigate to stable anchors", async ({ page }) => {
   await page.goto("/blog/some-math-facts-algebra/");
   const reference = page.locator('a[href="#eq-cone-normal"]').first();
-  await expect(reference).toHaveText("(3)");
+  const targetTag = page.locator("#eq-cone-normal .katex-html > .tag");
+  await expect(reference).toHaveText(await targetTag.innerText());
   await reference.click();
   await expect(page).toHaveURL(/#eq-cone-normal$/);
   await expect(page.locator("#eq-cone-normal")).toBeVisible();
 });
 
-test("equation tags align right and GriD-LMIA content remains readable", async ({ page }) => {
+test("long GriD-LMIA equations keep their tags after the formula", async ({ page }) => {
   await page.goto("/blog/introducing-grid-lmia/");
   const equation = page.locator("#eq-pd-lmi-problem");
   const tag = equation.locator(".katex-html > .tag");
+  const formulaRows = equation.locator(".katex-html > .base");
   await expect(tag).toHaveText("(1)");
-  const equationBox = await equation.boundingBox();
   const tagBox = await tag.boundingBox();
-  expect(equationBox).not.toBeNull();
   expect(tagBox).not.toBeNull();
-  expect(Math.abs(equationBox!.x + equationBox!.width - tagBox!.x - tagBox!.width)).toBeLessThan(8);
+
+  const rowBoxes = await formulaRows.evaluateAll((rows) =>
+    rows.map((row) => {
+      const rect = row.getBoundingClientRect();
+      return { left: rect.left, right: rect.right };
+    }),
+  );
+  const overlapsTag = rowBoxes.some(
+    (row) => row.left < tagBox!.x + tagBox!.width && row.right > tagBox!.x,
+  );
+  expect(overlapsTag).toBe(false);
+  expect(tagBox!.x).toBeGreaterThanOrEqual(Math.max(...rowBoxes.map((row) => row.right)));
+  await expect(equation.locator(".katex-display")).toHaveCSS("overflow-x", "auto");
 
   await expect(page.locator(".certificate-flow")).toBeVisible();
   const code = page.locator("pre.astro-code code").first();
@@ -131,7 +143,8 @@ test("article and table of contents share numbered stable anchors", async ({ pag
   await expect(page).toHaveURL(new RegExp(`#${headingId}$`));
 
   const equationReference = page.locator('a[href="#eq-cone-normal"]').first();
-  await expect(equationReference).toHaveText("(3)");
+  const equationTag = page.locator("#eq-cone-normal .katex-html > .tag");
+  await expect(equationReference).toHaveText(await equationTag.innerText());
 });
 
 test("desktop table of contents stays sticky and follows reading position", async ({ page, isMobile }) => {
@@ -172,7 +185,7 @@ test("mobile table of contents supports every close path", async ({ page, isMobi
   await expect(dialog).not.toHaveAttribute("open", "");
 
   await trigger.click();
-  await dialog.locator("[data-toc-link]").nth(1).click();
+  await dialog.locator('a[href="#discrete-time-lyapunov-stability"]').click();
   await expect(dialog).not.toHaveAttribute("open", "");
   await expect(page).toHaveURL(/#discrete-time-lyapunov-stability$/);
 
@@ -183,9 +196,13 @@ test("mobile table of contents supports every close path", async ({ page, isMobi
 
 test("proof details preserve keyboard behavior, nesting, and contained math", async ({ page }) => {
   await page.goto("/blog/some-math-facts-control/");
-  const outer = page.locator(".blog-prose details").first();
+  const outer = page.locator(".blog-prose details").filter({
+    has: page.getByText("Proof of the continuous-time Lyapunov theorem", { exact: true }),
+  }).first();
   const summary = outer.locator(":scope > summary");
-  const converse = outer.locator(":scope > details");
+  const converse = outer.locator(":scope > details").filter({
+    has: page.getByText("Converse direction", { exact: true }),
+  }).first();
 
   await expect(outer).toHaveAttribute("open", "");
   await expect(converse).not.toHaveAttribute("open", "");

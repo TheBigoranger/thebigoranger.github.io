@@ -7,27 +7,50 @@ excerpt: "A corrected reference note on norms, cones, positive semidefinite matr
 
 ## Norm comparisons
 
-For $x\in\mathbb{R}^n$ and $1\le p<\infty$,
-$\lVert x\rVert_p=(\sum_i|x_i|^p)^{1/p}$, while
-$\lVert x\rVert_\infty=\max_i|x_i|$. If $1\le q\le p\le\infty$, then
+For $x\in\mathbb{R}^n$ and $p\in(0,\infty]$, define
+
+$$
+\lVert x\rVert_p=
+\begin{cases}
+\left(\sum_{i=1}^n|x_i|^p\right)^{1/p},&0<p<\infty,\\
+\max_i|x_i|,&p=\infty.
+\end{cases}
+$$
+
+This is a norm when $p\ge1$; for $0<p<1$ it is a useful quasi-norm but does
+not satisfy the triangle inequality. For $0<q\le p\le\infty$,
 
 $$
 \lVert x\rVert_p\le \lVert x\rVert_q
-\le n^{1/q-1/p}\lVert x\rVert_p.
+\quad\text{and, more precisely,}\quad
+\lVert x\rVert_q\le n^{1/q-1/p}\lVert x\rVert_p.
 \label{norm-comparison}
 $$
 
 <details open>
 <summary>Proof of the norm comparison</summary>
 
-For the first inequality, normalize $y=x/\lVert x\rVert_q$. Since
-$|y_i|\le1$, $\sum_i|y_i|^p\le\sum_i|y_i|^q=1$. The second follows from
-Hölder's inequality. The dimension factor in $\eqref{norm-comparison}$
-matters whenever estimates are expected to scale with $n$.
+The zero vector is immediate, so suppose $x\ne0$ and normalize
+$y_i=|x_i|/\lVert x\rVert_q$. Then $0\le y_i\le1$ and
+$\sum_i y_i^q=1$. Since $p\ge q$, $y_i^p\le y_i^q$, hence
+
+$$
+\frac{\lVert x\rVert_p^p}{\lVert x\rVert_q^p}
+=\sum_i y_i^p\le\sum_i y_i^q=1.
+$$
+
+For the reverse comparison, apply Hölder to $\sum_i(|x_i|^q)\cdot1$ with
+conjugate exponents $p/q$ and $p/(p-q)$. After taking the $q$th root this
+gives the second inequality. Its dimension factor matters in estimates that
+must scale with $n$.
 
 </details>
 
-## Dual, polar, and normal cones
+## Cone
+
+A set $K\subseteq\mathbb{R}^n$ is a cone if $x\in K$ and $\theta\ge0$ imply
+$\theta x\in K$. Convexity is an additional property; a cone need not be
+convex unless that is stated.
 
 For a cone $K\subseteq\mathbb{R}^n$, use the conventions
 
@@ -36,8 +59,29 @@ K^*=\{y:\langle y,x\rangle\ge0\ \forall x\in K\},\qquad
 K^\circ=\{y:\langle y,x\rangle\le0\ \forall x\in K\}.
 $$
 
-Thus $K^\circ=-K^*$. For a closed convex set $C$, the convex-analysis normal
-cone at $x\in C$ is
+Thus $K^\circ=-K^*$.
+
+### Bipolar theorem
+
+If $K$ is a closed convex cone, then
+
+$$
+K^{**}=K.
+$$
+
+<details open>
+<summary>Proof of the bipolar theorem</summary>
+
+Every $x\in K$ satisfies $\langle y,x\rangle\ge0$ for every $y\in K^*$,
+so $K\subseteq K^{**}$. Conversely, if $z\notin K$, the strong separation
+theorem gives $y$ with $\langle y,z\rangle<0\le\langle y,x\rangle$ for every
+$x\in K$. Thus $y\in K^*$ but $z\notin K^{**}$, proving the reverse inclusion.
+
+</details>
+
+### Normal cone
+
+For a closed convex set $C$, the convex-analysis normal cone at $x\in C$ is
 
 $$
 N_C(x)=\{y:\langle y,z-x\rangle\le0\ \forall z\in C\}.
@@ -54,6 +98,22 @@ $$
 The orthogonality condition alone is not sufficient: the polar-cone
 condition in $\eqref{cone-normal}$ fixes the sign and is essential in KKT
 systems.
+<details open>
+<summary>Proof of the normal-cone identity</summary>
+
+Let $y\in N_K(x)$. Taking $z=0$ gives $\langle y,x\rangle\ge0$, while taking
+$z=tx$ with $t>1$ gives $(t-1)\langle y,x\rangle\le0$. Hence
+$\langle y,x\rangle=0$. The defining inequality reduces to
+$\langle y,z\rangle\le0$ for every $z\in K$, so
+$y\in K^\circ\cap x^\perp$.
+
+Conversely, if $y\in K^\circ\cap x^\perp$, then
+$\langle y,z-x\rangle=\langle y,z\rangle\le0$ for every $z\in K$.
+Therefore $y\in N_K(x)$. The polar condition is the piece missing from the
+older abbreviated claim.
+
+</details>
+
 
 ## Positive semidefinite matrices
 
@@ -65,7 +125,14 @@ minors.
 <details open>
 <summary>Proof of the trace criterion</summary>
 
-If $A=PP^\top\succeq0$ and $B=QQ^\top\succeq0$, then
+For $A,B\succeq0$,
+
+$$
+AB=0\quad\Longleftrightarrow\quad\operatorname{tr}(AB)=0.
+$$
+
+The forward implication follows by taking the trace. For the reverse,
+factor $A=PP^\top$ and $B=QQ^\top$. Then
 
 $$
 \operatorname{tr}(AB)
@@ -102,7 +169,27 @@ ordinary inverse formula is invalid; one needs a generalized inverse plus a
 range condition. This is why LMI derivations should state the definiteness of
 the pivot explicitly.
 
-## A standard SDP primal–dual pair
+## Linear matrix inequalities and semidefinite programming
+
+An affine LMI is $\mathcal A(x)=A_0+\sum_{i=1}^m x_iA_i\succeq0$, where the
+symmetric matrices $A_i$ are data and $x$ is the decision vector. The SDP
+
+$$
+\min_x\ c^\top x\quad\text{s.t.}\quad\mathcal A(x)\succeq0
+$$
+
+has Lagrange dual
+
+$$
+\max_{Z\succeq0}\ -\langle A_0,Z\rangle
+\quad\text{s.t.}\quad
+\langle A_i,Z\rangle=c_i,\ i=1,\ldots,m.
+$$
+
+This restores the affine-operator formulation from the Hexo article. The
+equivalent conic standard form below is useful for stating duality cleanly.
+
+### A standard SDP primal–dual pair
 
 For symmetric data $C,A_1,\ldots,A_m$, consider
 

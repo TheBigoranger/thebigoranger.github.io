@@ -5,7 +5,9 @@ tags: ["Dynamics", "Mechanics", "Control"]
 excerpt: "A compact derivation of generalized forces, Euler–Lagrange equations, Hamiltonian form, and the manipulator equation used in control."
 ---
 
-## Generalized coordinates and virtual work
+## Lagrangian mechanics
+
+### Euler–Lagrange equation and generalized force
 
 Let a mechanical configuration be described by generalized coordinates
 $q\in\mathbb{R}^m$, with particle positions $r_i(q,t)$. For virtual
@@ -24,12 +26,23 @@ Q_j=\sum_i F_i^\top\frac{\partial r_i}{\partial q_j}.
 $$
 
 Equation $\eqref{generalized-force}$ is the definition of generalized force.
-If $r_i$ depends on $q$ and $t$, then
-$\partial \dot r_i/\partial\dot q_j=\partial r_i/\partial q_j$; this gives the
-equivalent velocity-Jacobian form
-$Q_j=\sum_i F_i^\top(\partial\dot r_i/\partial\dot q_j)$.
+The velocity formulation in the Hexo article follows by differentiating the
+coordinate map:
 
-## Euler–Lagrange equations
+$$
+\dot r_i
+=\sum_{j=1}^{m}\frac{\partial r_i}{\partial q_j}\dot q_j
++\frac{\partial r_i}{\partial t}
+\quad\Longrightarrow\quad
+\frac{\partial\dot r_i}{\partial\dot q_j}
+=\frac{\partial r_i}{\partial q_j}.
+$$
+
+Consequently
+$Q_j=\sum_i F_i^\top(\partial\dot r_i/\partial\dot q_j)$. The explicit-time
+term does not depend on $\dot q$, so it vanishes in the partial derivative.
+
+The Euler–Lagrange equation itself follows from D'Alembert's principle.
 
 With kinetic energy $T$ and potential energy $V$, define
 $L(q,\dot q,t)=T-V$. D'Alembert's principle gives
