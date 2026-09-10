@@ -46,6 +46,74 @@ must scale with $n$.
 
 </details>
 
+
+## Gershgorin discs
+
+Let $A=(a_{ij})\in\mathbb{C}^{n\times n}$. Every eigenvalue $\lambda$ of
+$A$ satisfies the row-disc inclusion
+
+$$
+\lambda\in
+\bigcup_{i=1}^n
+\left\{z:|z-a_{ii}|\le\sum_{j\ne i}|a_{ij}|\right\},
+$$
+
+and the column-disc inclusion
+
+$$
+\lambda\in
+\bigcup_{j=1}^n
+\left\{z:|z-a_{jj}|\le\sum_{i\ne j}|a_{ij}|\right\}.
+\label{gershgorin-discs}
+$$
+
+<details open>
+<summary>Proof from <var>Ax</var> = &lambda;<var>x</var></summary>
+
+Let $x\ne0$ be an eigenvector associated with $\lambda$. The equation
+$Ax=\lambda x$ gives, for every $i$,
+
+$$
+(\lambda-a_{ii})x_i=\sum_{j\ne i}a_{ij}x_j,
+$$
+
+and therefore, by the triangle inequality,
+
+$$
+|\lambda-a_{ii}|\,|x_i|
+\le\sum_{j\ne i}|a_{ij}|\,|x_j|.
+\label{gershgorin-coordinate}
+$$
+
+For the row-disc bound, choose $k$ such that $|x_k|=\lVert x\rVert_\infty>0$. The $k$th coordinate of
+$\eqref{gershgorin-coordinate}$ satisfies
+
+$$
+|\lambda-a_{kk}|\lVert x\rVert_\infty
+\le\sum_{j\ne k}|a_{kj}|\,|x_j|
+\le\left(\sum_{j\ne k}|a_{kj}|\right)\lVert x\rVert_\infty.
+$$
+
+Cancelling $\lVert x\rVert_\infty$ places $\lambda$ in the $k$th row
+disc.
+
+For the column-disc bound, sum $\eqref{gershgorin-coordinate}$ over $i$:
+
+$$
+\sum_i|\lambda-a_{ii}|\,|x_i|
+\le\sum_i\sum_{j\ne i}|a_{ij}|\,|x_j|
+=
+\sum_j\left(\sum_{i\ne j}|a_{ij}|\right)|x_j|.
+$$
+
+If $\lambda$ were outside every column disc, then
+$|\lambda-a_{jj}|>\sum_{i\ne j}|a_{ij}|$ for every $j$. Since $x\ne0$,
+the left-hand side would be strictly larger than the right-hand side, a
+contradiction. Thus every eigenvalue lies in both the union of the row discs and the union
+of the column discs.
+
+</details>
+
 ## Cone
 
 A set $K\subseteq\mathbb{R}^n$ is a cone if $x\in K$ and $\theta\ge0$ imply
