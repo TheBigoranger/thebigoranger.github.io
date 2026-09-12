@@ -24,6 +24,41 @@ $$
 The condition is an LMI in $P$. The original Hexo note gave both a trajectory
 argument and a Jordan-form construction; both are retained below.
 
+**Why symmetry matters.** In the standard LMI notation, $P\succ0$ already
+means that $P$ is symmetric positive definite. It is not enough to allow a
+nonsymmetric $P$ and interpret positivity only through $x^\top Px>0$. For
+example, let
+
+$$
+A=\begin{bmatrix}1&-1\\1&1\end{bmatrix},
+\qquad
+P=\begin{bmatrix}1&-2\\2&1\end{bmatrix}.
+$$
+
+Although $P\ne P^\top$, its symmetric part is the identity, so
+
+$$
+x^\top Px
+=x^\top\frac{P+P^\top}{2}x
+=x^\top x>0
+\qquad (x\ne0).
+$$
+
+Moreover,
+
+$$
+PA=\begin{bmatrix}-1&-3\\3&-1\end{bmatrix},
+\qquad
+\operatorname{He}(PA)
+=PA+(PA)^\top
+=-2I\prec0.
+$$
+
+Nevertheless, $\lambda(A)=1\pm i$, so $A$ is not Hurwitz. The
+skew-symmetric part of $P$ disappears from $x^\top Px$ but remains in
+$\operatorname{He}(PA)$; consequently, the symmetry requirement on $P$
+cannot be dropped from the Lyapunov certificate.
+
 <details open>
 <summary>Proof of the continuous-time Lyapunov inequality</summary>
 
